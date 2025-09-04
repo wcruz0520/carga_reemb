@@ -454,15 +454,26 @@ namespace CargaReembolso
 
         private void ProcessRow(string tableName, DataTable table, DataRow row)
         {
-            var rs = (SAPbobsCOM.Recordset)rCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-
-            string where = $"[Code] = '{row["Code"]}'";
-            if (table.Columns.Contains("LineId"))
+            if (!tableName.StartsWith("@"))
             {
-                where += $" AND [LineId] = {row["LineId"]}";
+                tableName = "@" + tableName;
             }
 
-            rs.DoQuery($"SELECT COUNT(*) FROM [{tableName}] WHERE {where}");
+            var rs = (SAPbobsCOM.Recordset)rCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+
+            // Quoting rules for SQL Server and SAP HANA
+            string qStart = rCompany.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB ? "\"" : "[";
+            string qEnd = rCompany.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB ? "\"" : "]";
+
+            string where = $"{qStart}Code{qEnd} = '{row["Code"]}'";
+
+            if (table.Columns.Contains("LineId"))
+            {
+                where += $" AND {qStart}LineId{qEnd} = {row["LineId"]}";
+            }
+
+            string tableSql = $"{qStart}{tableName}{qEnd}";
+            rs.DoQuery($"SELECT COUNT(*) FROM {tableSql} WHERE {where}");
             bool exists = Convert.ToInt32(rs.Fields.Item(0).Value) > 0;
 
             var setClauses = new List<string>();
@@ -494,16 +505,17 @@ namespace CargaReembolso
                     formattedVal = $"'{rawVal.Replace("'", "''")}'";
                 }
 
+                string colSql = $"{qStart}{colName}{qEnd}";
                 if (exists)
                 {
                     if (!isKey)
                     {
-                        setClauses.Add($"[{colName}] = {formattedVal}");
+                        setClauses.Add($"{colSql} = {formattedVal}");
                     }
                 }
                 else
                 {
-                    cols.Add($"[{colName}]");
+                    cols.Add(colSql);
                     vals.Add(formattedVal);
                 }
             }
@@ -511,11 +523,11 @@ namespace CargaReembolso
             string sql;
             if (exists)
             {
-                sql = $"UPDATE [{tableName}] SET {string.Join(",", setClauses)} WHERE {where}";
+                sql = $"UPDATE {tableSql} SET {string.Join(",", setClauses)} WHERE {where}";
             }
             else
             {
-                sql = $"INSERT INTO [{tableName}] ({string.Join(",", cols)}) VALUES ({string.Join(",", vals)})";
+                sql = $"INSERT INTO {tableSql} ({string.Join(",", cols)}) VALUES ({string.Join(",", vals)})";
             }
 
             rs.DoQuery(sql);
