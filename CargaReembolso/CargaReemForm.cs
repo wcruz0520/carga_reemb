@@ -419,5 +419,107 @@ namespace CargaReembolso
         {
             OpenExcelAndLoad(gridDOC);
         }
+
+        private void btnProcesar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ProcessGridUDO();
+                MessageBox.Show("Procesamiento finalizado", "Carga de UDO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al procesar: " + ex.Message, "Carga de UDO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ProcessGridUDO()
+        {
+            var tabs = this.Controls.Find(gridUDO.Name + "Tabs", true).FirstOrDefault() as TabControl;
+            if (tabs == null) return;
+
+            foreach (TabPage page in tabs.TabPages)
+            {
+                var grid = page.Controls.OfType<DataGridView>().FirstOrDefault();
+                if (grid == null) continue;
+                var table = grid.DataSource as DataTable;
+                if (table == null) continue;
+
+                foreach (DataRow row in table.Rows)
+                {
+                    ProcessRow(page.Text, table, row);
+                }
+            }
+        }
+
+        private void ProcessRow(string tableName, DataTable table, DataRow row)
+        {
+            var rs = (SAPbobsCOM.Recordset)rCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
+
+            string where = $"[Code] = '{row["Code"]}'";
+            if (table.Columns.Contains("LineId"))
+            {
+                where += $" AND [LineId] = {row["LineId"]}";
+            }
+
+            rs.DoQuery($"SELECT COUNT(*) FROM [{tableName}] WHERE {where}");
+            bool exists = Convert.ToInt32(rs.Fields.Item(0).Value) > 0;
+
+            var setClauses = new List<string>();
+            var cols = new List<string>();
+            var vals = new List<string>();
+
+            foreach (DataColumn col in table.Columns)
+            {
+                var colName = col.ColumnName;
+                var rawVal = row[col]?.ToString();
+                bool isKey = colName.Equals("Code", StringComparison.OrdinalIgnoreCase) ||
+                             colName.Equals("LineId", StringComparison.OrdinalIgnoreCase);
+
+                string formattedVal;
+                if (string.IsNullOrWhiteSpace(rawVal))
+                {
+                    formattedVal = "NULL";
+                }
+                else if (DateTime.TryParse(rawVal, out var dateVal))
+                {
+                    formattedVal = $"'{dateVal:yyyyMMdd}'";
+                }
+                else if (double.TryParse(rawVal, out _))
+                {
+                    formattedVal = rawVal.Replace(',', '.');
+                }
+                else
+                {
+                    formattedVal = $"'{rawVal.Replace("'", "''")}'";
+                }
+
+                if (exists)
+                {
+                    if (!isKey)
+                    {
+                        setClauses.Add($"[{colName}] = {formattedVal}");
+                    }
+                }
+                else
+                {
+                    cols.Add($"[{colName}]");
+                    vals.Add(formattedVal);
+                }
+            }
+
+            string sql;
+            if (exists)
+            {
+                sql = $"UPDATE [{tableName}] SET {string.Join(",", setClauses)} WHERE {where}";
+            }
+            else
+            {
+                sql = $"INSERT INTO [{tableName}] ({string.Join(",", cols)}) VALUES ({string.Join(",", vals)})";
+            }
+
+            rs.DoQuery(sql);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+        }
     }
 }
