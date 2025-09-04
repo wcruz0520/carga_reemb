@@ -24,3 +24,4 @@ C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaR
 C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaReembolso.csproj.CopyComplete
 C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaReembolso.exe
 C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaReembolso.pdb
+C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaReembolso.csproj.AssemblyReference.cache

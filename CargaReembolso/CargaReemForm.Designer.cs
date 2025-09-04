@@ -170,7 +170,7 @@ namespace CargaReembolso
             // pictureBox1
             // 
             this.pictureBox1.Image = global::CargaReembolso.Properties.Resources.LogoSS;
-            this.pictureBox1.Location = new System.Drawing.Point(1230, 785);
+            this.pictureBox1.Location = new System.Drawing.Point(1230, 782);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(158, 50);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -182,7 +182,7 @@ namespace CargaReembolso
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(1235, 833);
+            this.label3.Location = new System.Drawing.Point(1235, 828);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(58, 15);
             this.label3.TabIndex = 13;
@@ -193,7 +193,7 @@ namespace CargaReembolso
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1451, 857);
+            this.ClientSize = new System.Drawing.Size(1451, 863);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnLimpDoc);

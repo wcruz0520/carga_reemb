@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.IO;
 using ExcelDataReader;
+using System.Globalization;
 
 namespace CargaReembolso
 {
@@ -39,7 +40,30 @@ namespace CargaReembolso
         public SAPbouiCOM.SboGuiApi rSboGui;
         public SAPbobsCOM.Company rCompany;
 
+        private const string UDO_CODE = "SS_REEMCAB";
+        private const string HEADER_TABLE = "@SS_REEMCAB";
+        private const string DETAIL_COLLECTION = "SS_REEMDET";
+
         public String Anio = DateTime.Today.Year.ToString();
+
+        // Campos numéricos (db_Float/st_Price)
+        private static readonly HashSet<string> FloatFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            { "U_SS_IVA0","U_SS_IvaDif0","U_SS_NoObjIVA","U_SS_MontoIVA","U_SS_MontoICE","U_SS_IvaExe" };
+
+        // Campos de fecha
+        private static readonly HashSet<string> DateFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            { "U_SS_FecEmi" };
+
+        // Longitudes máximas (para recortar si fuese necesario)
+        private static readonly Dictionary<string, int> MaxLen = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+{
+            { "U_SS_TipoId", 30 }, { "U_SS_IdProv", 30 }, { "U_SS_TipoComp", 40 },
+            { "U_SS_Est", 3 }, { "U_SS_PtoEmi", 20 }, { "U_SS_NumDoc", 15 }, { "U_SS_NumAut", 49 }
+        };
+
+        // Valores permitidos de U_SS_TipoId
+        private static readonly HashSet<string> AllowedTipoId = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            { "C","P","R","F" };
 
         private Dictionary<string, string> dictUDOs = new Dictionary<string, string>
         {
@@ -435,10 +459,7 @@ namespace CargaReembolso
 
         private void btnProcesar_Click(object sender, EventArgs e)
         {
-            string udo = cmbUDOs.SelectedValue.ToString();
-            string doc = cmbDocs.SelectedValue.ToString();
 
-            MessageBox.Show($"Procesando UDO: {udo} y Documento: {doc}");
         }
 
         private void CargaReemForm_Load(object sender, EventArgs e)
