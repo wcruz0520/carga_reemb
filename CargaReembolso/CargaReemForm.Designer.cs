@@ -85,9 +85,9 @@ namespace CargaReembolso
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(26, 435);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(149, 17);
+            this.label1.Size = new System.Drawing.Size(191, 21);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Tipo de Documento";
+            this.label1.Text = "Tipo de tabla nativa";
             // 
             // label2
             // 
@@ -102,8 +102,6 @@ namespace CargaReembolso
             // cmbDocs
             // 
             this.cmbDocs.FormattingEnabled = true;
-            this.cmbDocs.Items.AddRange(new object[] {
-            "Factura deudor"});
             this.cmbDocs.Location = new System.Drawing.Point(205, 428);
             this.cmbDocs.Name = "cmbDocs";
             this.cmbDocs.Size = new System.Drawing.Size(174, 24);
@@ -112,8 +110,6 @@ namespace CargaReembolso
             // cmbUDOs
             // 
             this.cmbUDOs.FormattingEnabled = true;
-            this.cmbUDOs.Items.AddRange(new object[] {
-            "Reembolso"});
             this.cmbUDOs.Location = new System.Drawing.Point(205, 55);
             this.cmbUDOs.Name = "cmbUDOs";
             this.cmbUDOs.Size = new System.Drawing.Size(174, 24);
@@ -214,6 +210,7 @@ namespace CargaReembolso
             this.Controls.Add(this.btnLimpUDO);
             this.Name = "CargaReemForm";
             this.Text = "CARGA REEMBOLSOS";
+            this.Load += new System.EventHandler(this.CargaReemForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridUDO)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridDOC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

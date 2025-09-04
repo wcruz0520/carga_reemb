@@ -39,7 +39,20 @@ namespace CargaReembolso
         public SAPbouiCOM.SboGuiApi rSboGui;
         public SAPbobsCOM.Company rCompany;
 
-        public String Anio = DateTime.Today.Year.ToString(); 
+        public String Anio = DateTime.Today.Year.ToString();
+
+        private Dictionary<string, string> dictUDOs = new Dictionary<string, string>
+        {
+            { "1", "Documento" },
+            { "2", "Maestro" },
+            { "3", "Ningun Objeto" }
+        };
+
+        private Dictionary<string, string> dictDocs = new Dictionary<string, string>
+        {
+            { "1", "Documento" },
+            { "2", "Maestro" },
+        };
 
         public CargaReemForm()
         {
@@ -422,116 +435,27 @@ namespace CargaReembolso
 
         private void btnProcesar_Click(object sender, EventArgs e)
         {
-            try
-            {
-                ProcessGridUDO();
-                MessageBox.Show("Procesamiento finalizado", "Carga de UDO", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al procesar: " + ex.Message, "Carga de UDO", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            string udo = cmbUDOs.SelectedValue.ToString();
+            string doc = cmbDocs.SelectedValue.ToString();
+
+            MessageBox.Show($"Procesando UDO: {udo} y Documento: {doc}");
         }
 
-        private void ProcessGridUDO()
+        private void CargaReemForm_Load(object sender, EventArgs e)
         {
-            var tabs = this.Controls.Find(gridUDO.Name + "Tabs", true).FirstOrDefault() as TabControl;
-            if (tabs == null) return;
+            // Llenar UDOs
+            cmbUDOs.DataSource = new BindingSource(dictUDOs, null);
+            cmbUDOs.DisplayMember = "Value";  // Texto visible
+            cmbUDOs.ValueMember = "Key";      // Valor interno
 
-            foreach (TabPage page in tabs.TabPages)
-            {
-                var grid = page.Controls.OfType<DataGridView>().FirstOrDefault();
-                if (grid == null) continue;
-                var table = grid.DataSource as DataTable;
-                if (table == null) continue;
+            // Llenar Documentos
+            cmbDocs.DataSource = new BindingSource(dictDocs, null);
+            cmbDocs.DisplayMember = "Value";
+            cmbDocs.ValueMember = "Key";
 
-                foreach (DataRow row in table.Rows)
-                {
-                    ProcessRow(page.Text, table, row);
-                }
-            }
-        }
-
-        private void ProcessRow(string tableName, DataTable table, DataRow row)
-        {
-            if (!tableName.StartsWith("@"))
-            {
-                tableName = "@" + tableName;
-            }
-
-            var rs = (SAPbobsCOM.Recordset)rCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-
-            // Quoting rules for SQL Server and SAP HANA
-            string qStart = rCompany.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB ? "\"" : "[";
-            string qEnd = rCompany.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB ? "\"" : "]";
-
-            string where = $"{qStart}Code{qEnd} = '{row["Code"]}'";
-
-            if (table.Columns.Contains("LineId"))
-            {
-                where += $" AND {qStart}LineId{qEnd} = {row["LineId"]}";
-            }
-
-            string tableSql = $"{qStart}{tableName}{qEnd}";
-            rs.DoQuery($"SELECT COUNT(*) FROM {tableSql} WHERE {where}");
-            bool exists = Convert.ToInt32(rs.Fields.Item(0).Value) > 0;
-
-            var setClauses = new List<string>();
-            var cols = new List<string>();
-            var vals = new List<string>();
-
-            foreach (DataColumn col in table.Columns)
-            {
-                var colName = col.ColumnName;
-                var rawVal = row[col]?.ToString();
-                bool isKey = colName.Equals("Code", StringComparison.OrdinalIgnoreCase) ||
-                             colName.Equals("LineId", StringComparison.OrdinalIgnoreCase);
-
-                string formattedVal;
-                if (string.IsNullOrWhiteSpace(rawVal))
-                {
-                    formattedVal = "NULL";
-                }
-                else if (DateTime.TryParse(rawVal, out var dateVal))
-                {
-                    formattedVal = $"'{dateVal:yyyyMMdd}'";
-                }
-                else if (double.TryParse(rawVal, out _))
-                {
-                    formattedVal = rawVal.Replace(',', '.');
-                }
-                else
-                {
-                    formattedVal = $"'{rawVal.Replace("'", "''")}'";
-                }
-
-                string colSql = $"{qStart}{colName}{qEnd}";
-                if (exists)
-                {
-                    if (!isKey)
-                    {
-                        setClauses.Add($"{colSql} = {formattedVal}");
-                    }
-                }
-                else
-                {
-                    cols.Add(colSql);
-                    vals.Add(formattedVal);
-                }
-            }
-
-            string sql;
-            if (exists)
-            {
-                sql = $"UPDATE {tableSql} SET {string.Join(",", setClauses)} WHERE {where}";
-            }
-            else
-            {
-                sql = $"INSERT INTO {tableSql} ({string.Join(",", cols)}) VALUES ({string.Join(",", vals)})";
-            }
-
-            rs.DoQuery(sql);
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+            // Opcional: Seleccionar el primer ítem
+            cmbUDOs.SelectedIndex = 0;
+            cmbDocs.SelectedIndex = 0;
         }
     }
 }
