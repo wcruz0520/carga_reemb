@@ -109,10 +109,30 @@
     <Compile Include="CargaReemForm.Designer.cs">
       <DependentUpon>CargaReemForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\ReembolsoController.cs" />
+    <Compile Include="Interfaces\FactInterface.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Interfaces\FactInterface.Designer.cs">
+      <DependentUpon>FactInterface.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\ReembInterface.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Interfaces\ReembInterface.Designer.cs">
+      <DependentUpon>ReembInterface.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Reembolso.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CargaReemForm.resx">
       <DependentUpon>CargaReemForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\FactInterface.resx">
+      <DependentUpon>FactInterface.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\ReembInterface.resx">
+      <DependentUpon>ReembInterface.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -146,5 +166,6 @@
     <None Include="Resources\LogoV2.ico" />
     <None Include="Resources\LogoV3.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

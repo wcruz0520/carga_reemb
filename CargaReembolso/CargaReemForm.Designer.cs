@@ -29,212 +29,151 @@ namespace CargaReembolso
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnLimpUDO = new System.Windows.Forms.Button();
             this.btnProcesar = new System.Windows.Forms.Button();
             this.btnSimular = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cmbDocs = new System.Windows.Forms.ComboBox();
-            this.cmbUDOs = new System.Windows.Forms.ComboBox();
-            this.btnCUDO = new System.Windows.Forms.Button();
-            this.btnCDOC = new System.Windows.Forms.Button();
-            this.gridUDO = new System.Windows.Forms.DataGridView();
-            this.gridDOC = new System.Windows.Forms.DataGridView();
-            this.btnLimpDoc = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.gridUDO)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridDOC)).BeginInit();
+            this.pnlInferior = new System.Windows.Forms.Panel();
+            this.pnlSuperior = new System.Windows.Forms.Panel();
+            this.btnReemb = new System.Windows.Forms.Button();
+            this.btnFact = new System.Windows.Forms.Button();
+            this.pnlContent = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pnlInferior.SuspendLayout();
+            this.pnlSuperior.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnLimpUDO
-            // 
-            this.btnLimpUDO.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpUDO.Location = new System.Drawing.Point(1285, 45);
-            this.btnLimpUDO.Name = "btnLimpUDO";
-            this.btnLimpUDO.Size = new System.Drawing.Size(137, 34);
-            this.btnLimpUDO.TabIndex = 0;
-            this.btnLimpUDO.Text = "LIMPIAR";
-            this.btnLimpUDO.UseVisualStyleBackColor = true;
             // 
             // btnProcesar
             // 
+            this.btnProcesar.BackColor = System.Drawing.Color.White;
+            this.btnProcesar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnProcesar.FlatAppearance.BorderSize = 0;
+            this.btnProcesar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProcesar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnProcesar.Location = new System.Drawing.Point(29, 801);
+            this.btnProcesar.Location = new System.Drawing.Point(0, 0);
+            this.btnProcesar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnProcesar.Name = "btnProcesar";
-            this.btnProcesar.Size = new System.Drawing.Size(137, 34);
+            this.btnProcesar.Size = new System.Drawing.Size(154, 58);
             this.btnProcesar.TabIndex = 1;
             this.btnProcesar.Text = "PROCESAR";
-            this.btnProcesar.UseVisualStyleBackColor = true;
-            this.btnProcesar.Click += new System.EventHandler(this.btnProcesar_Click);
+            this.btnProcesar.UseVisualStyleBackColor = false;
             // 
             // btnSimular
             // 
+            this.btnSimular.BackColor = System.Drawing.Color.White;
+            this.btnSimular.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnSimular.FlatAppearance.BorderSize = 0;
+            this.btnSimular.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSimular.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSimular.Location = new System.Drawing.Point(205, 801);
+            this.btnSimular.Location = new System.Drawing.Point(154, 0);
+            this.btnSimular.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnSimular.Name = "btnSimular";
-            this.btnSimular.Size = new System.Drawing.Size(137, 34);
+            this.btnSimular.Size = new System.Drawing.Size(154, 58);
             this.btnSimular.TabIndex = 2;
             this.btnSimular.Text = "SIMULAR";
-            this.btnSimular.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(26, 435);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(191, 21);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Tipo de tabla nativa";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(26, 58);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(102, 17);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Tipo de UDO";
-            // 
-            // cmbDocs
-            // 
-            this.cmbDocs.FormattingEnabled = true;
-            this.cmbDocs.Location = new System.Drawing.Point(205, 428);
-            this.cmbDocs.Name = "cmbDocs";
-            this.cmbDocs.Size = new System.Drawing.Size(174, 24);
-            this.cmbDocs.TabIndex = 5;
-            // 
-            // cmbUDOs
-            // 
-            this.cmbUDOs.FormattingEnabled = true;
-            this.cmbUDOs.Location = new System.Drawing.Point(205, 55);
-            this.cmbUDOs.Name = "cmbUDOs";
-            this.cmbUDOs.Size = new System.Drawing.Size(174, 24);
-            this.cmbUDOs.TabIndex = 6;
-            // 
-            // btnCUDO
-            // 
-            this.btnCUDO.Location = new System.Drawing.Point(437, 56);
-            this.btnCUDO.Name = "btnCUDO";
-            this.btnCUDO.Size = new System.Drawing.Size(75, 23);
-            this.btnCUDO.TabIndex = 7;
-            this.btnCUDO.Text = "...";
-            this.btnCUDO.UseVisualStyleBackColor = true;
-            this.btnCUDO.Click += new System.EventHandler(this.btnCUDO_Click);
-            // 
-            // btnCDOC
-            // 
-            this.btnCDOC.Location = new System.Drawing.Point(437, 429);
-            this.btnCDOC.Name = "btnCDOC";
-            this.btnCDOC.Size = new System.Drawing.Size(75, 23);
-            this.btnCDOC.TabIndex = 8;
-            this.btnCDOC.Text = "...";
-            this.btnCDOC.UseVisualStyleBackColor = true;
-            this.btnCDOC.Click += new System.EventHandler(this.btnCDOC_Click);
-            // 
-            // gridUDO
-            // 
-            this.gridUDO.BackgroundColor = System.Drawing.Color.White;
-            this.gridUDO.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridUDO.Location = new System.Drawing.Point(29, 101);
-            this.gridUDO.Name = "gridUDO";
-            this.gridUDO.RowHeadersWidth = 51;
-            this.gridUDO.RowTemplate.Height = 24;
-            this.gridUDO.Size = new System.Drawing.Size(1393, 302);
-            this.gridUDO.TabIndex = 9;
-            // 
-            // gridDOC
-            // 
-            this.gridDOC.BackgroundColor = System.Drawing.Color.White;
-            this.gridDOC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridDOC.Location = new System.Drawing.Point(29, 475);
-            this.gridDOC.Name = "gridDOC";
-            this.gridDOC.RowHeadersWidth = 51;
-            this.gridDOC.RowTemplate.Height = 24;
-            this.gridDOC.Size = new System.Drawing.Size(1393, 302);
-            this.gridDOC.TabIndex = 10;
-            // 
-            // btnLimpDoc
-            // 
-            this.btnLimpDoc.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpDoc.Location = new System.Drawing.Point(1285, 422);
-            this.btnLimpDoc.Name = "btnLimpDoc";
-            this.btnLimpDoc.Size = new System.Drawing.Size(137, 34);
-            this.btnLimpDoc.TabIndex = 11;
-            this.btnLimpDoc.Text = "LIMPIAR";
-            this.btnLimpDoc.UseVisualStyleBackColor = true;
+            this.btnSimular.UseVisualStyleBackColor = false;
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox1.Image = global::CargaReembolso.Properties.Resources.LogoSS;
-            this.pictureBox1.Location = new System.Drawing.Point(1230, 782);
+            this.pictureBox1.Location = new System.Drawing.Point(1454, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(158, 50);
+            this.pictureBox1.Size = new System.Drawing.Size(178, 58);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // label3
+            // pnlInferior
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(1235, 828);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 15);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "Copyright";
+            this.pnlInferior.BackColor = System.Drawing.Color.Gainsboro;
+            this.pnlInferior.Controls.Add(this.pictureBox1);
+            this.pnlInferior.Controls.Add(this.btnSimular);
+            this.pnlInferior.Controls.Add(this.btnProcesar);
+            this.pnlInferior.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlInferior.Location = new System.Drawing.Point(0, 1021);
+            this.pnlInferior.Name = "pnlInferior";
+            this.pnlInferior.Size = new System.Drawing.Size(1632, 58);
+            this.pnlInferior.TabIndex = 16;
+            // 
+            // pnlSuperior
+            // 
+            this.pnlSuperior.BackColor = System.Drawing.SystemColors.Window;
+            this.pnlSuperior.Controls.Add(this.btnReemb);
+            this.pnlSuperior.Controls.Add(this.btnFact);
+            this.pnlSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSuperior.Location = new System.Drawing.Point(0, 0);
+            this.pnlSuperior.Name = "pnlSuperior";
+            this.pnlSuperior.Size = new System.Drawing.Size(1632, 53);
+            this.pnlSuperior.TabIndex = 17;
+            // 
+            // btnReemb
+            // 
+            this.btnReemb.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnReemb.FlatAppearance.BorderSize = 0;
+            this.btnReemb.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnReemb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReemb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReemb.Location = new System.Drawing.Point(0, 0);
+            this.btnReemb.Name = "btnReemb";
+            this.btnReemb.Size = new System.Drawing.Size(827, 53);
+            this.btnReemb.TabIndex = 2;
+            this.btnReemb.Text = "Reembolso";
+            this.btnReemb.UseVisualStyleBackColor = true;
+            this.btnReemb.Click += new System.EventHandler(this.btnReemb_Click);
+            // 
+            // btnFact
+            // 
+            this.btnFact.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnFact.FlatAppearance.BorderSize = 0;
+            this.btnFact.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnFact.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFact.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFact.Location = new System.Drawing.Point(833, 0);
+            this.btnFact.Name = "btnFact";
+            this.btnFact.Size = new System.Drawing.Size(799, 53);
+            this.btnFact.TabIndex = 1;
+            this.btnFact.Text = "Factura";
+            this.btnFact.UseVisualStyleBackColor = true;
+            this.btnFact.Click += new System.EventHandler(this.btnFact_Click);
+            // 
+            // pnlContent
+            // 
+            this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContent.Location = new System.Drawing.Point(0, 53);
+            this.pnlContent.Name = "pnlContent";
+            this.pnlContent.Size = new System.Drawing.Size(1632, 968);
+            this.pnlContent.TabIndex = 18;
             // 
             // CargaReemForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1451, 863);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.btnLimpDoc);
-            this.Controls.Add(this.gridDOC);
-            this.Controls.Add(this.gridUDO);
-            this.Controls.Add(this.btnCDOC);
-            this.Controls.Add(this.btnCUDO);
-            this.Controls.Add(this.cmbUDOs);
-            this.Controls.Add(this.cmbDocs);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnSimular);
-            this.Controls.Add(this.btnProcesar);
-            this.Controls.Add(this.btnLimpUDO);
+            this.ClientSize = new System.Drawing.Size(1632, 1079);
+            this.Controls.Add(this.pnlContent);
+            this.Controls.Add(this.pnlSuperior);
+            this.Controls.Add(this.pnlInferior);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CargaReemForm";
             this.Text = "CARGA REEMBOLSOS";
-            this.Load += new System.EventHandler(this.CargaReemForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.gridUDO)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridDOC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.pnlInferior.ResumeLayout(false);
+            this.pnlSuperior.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnLimpUDO;
         private System.Windows.Forms.Button btnProcesar;
         private System.Windows.Forms.Button btnSimular;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cmbDocs;
-        private System.Windows.Forms.ComboBox cmbUDOs;
-        private System.Windows.Forms.Button btnCUDO;
-        private System.Windows.Forms.Button btnCDOC;
-        private System.Windows.Forms.DataGridView gridUDO;
-        private System.Windows.Forms.DataGridView gridDOC;
-        private System.Windows.Forms.Button btnLimpDoc;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel pnlInferior;
+        private System.Windows.Forms.Panel pnlSuperior;
+        private System.Windows.Forms.Button btnFact;
+        private System.Windows.Forms.Panel pnlContent;
+        private System.Windows.Forms.Button btnReemb;
     }
 }
 
