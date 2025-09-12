@@ -78,6 +78,7 @@ namespace CargaReembolso.Interfaces
             this.btnCargar.TabIndex = 3;
             this.btnCargar.Text = "...";
             this.btnCargar.UseVisualStyleBackColor = false;
+            this.btnCargar.Click += new System.EventHandler(this.btnCargar_Click);
             // 
             // btnLimpiar
             // 
@@ -92,6 +93,7 @@ namespace CargaReembolso.Interfaces
             this.btnLimpiar.TabIndex = 2;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = false;
+            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
             // pnl1
             // 
