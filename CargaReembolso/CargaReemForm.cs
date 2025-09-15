@@ -15,6 +15,7 @@ using System.Globalization;
 using CargaReembolso.Interfaces;
 using CargaReembolso.Helpers;
 using CargaReembolso.Entidades;
+using CargaReembolso.Views;
 
 namespace CargaReembolso
 {
@@ -44,6 +45,9 @@ namespace CargaReembolso
         private Color colorDefault = SystemColors.Control;
         private Color colorActivo = Color.LightBlue;
 
+        private List<ResultadoTransaccion> resultadosReemb = new List<ResultadoTransaccion>();
+        private List<ResultadoTransaccion> resultadosFact = new List<ResultadoTransaccion>();
+
         public CargaReemForm()
         {
             InitializeComponent();
@@ -52,6 +56,9 @@ namespace CargaReembolso
             //label3.Text = $"Copyright © {Anio} SOLSAP S.A.";
 
             this.AutoSize = true;
+            this.btnProcesar.Enabled = false;
+            this.btnSimular.Enabled = false;
+            this.btnConnect.Enabled = true;
 
             strTest = Environment.GetCommandLineArgs();
             strConnString = ObtenerCadenaConexion(strTest);
@@ -65,6 +72,10 @@ namespace CargaReembolso
             if (ConectarSAP(strConnString))
             {
                 this.Text = $"CARGA REEMBOLSOS {rCompany.CompanyName.ToString().ToUpper()}";
+                //this.btnConnect.Enabled = false;
+                this.btnConnect.Text = "Desconectar";
+                this.btnProcesar.Enabled = true;
+                this.btnSimular.Enabled = true;
             }
 
             ucFact = new FactInterface();
@@ -205,42 +216,77 @@ namespace CargaReembolso
             botonSeleccionado.BackColor = colorActivo;
         }
 
-        private void btnProcesar_Click(object sender, EventArgs e)
+        private async void btnProcesar_Click(object sender, EventArgs e)
         {
-            var helper = new SAPReembolsoHelper(rCompany);
+            var Factgrids_valid = ucFact.GetAllGrids();
+            this.btnConnect.Enabled = false;
+            this.btnSimular.Enabled = false;
+            this.btnFact.Enabled = false;
+            this.btnReemb.Enabled = false;
 
-            var grids = ucReemb.GetAllGrids();
-            if (grids.Count < 2)
+            // Ejecutar en otro hilo
+            await Task.Run(() =>
             {
-                MessageBox.Show("Debe cargar al menos 2 hojas (Cabecera y Detalle).",
+                crearReembolsos();
+                if (Factgrids_valid.Count >= 1)
+                {
+                    crearFactura();
+                }
+            });
+
+            var frmResultados = new ResultadosForm(resultadosReemb, resultadosFact);
+            frmResultados.Text = "Resultado procesamiento - Real";
+            frmResultados.StartPosition = FormStartPosition.CenterParent;
+            frmResultados.ShowDialog();
+
+            this.btnConnect.Enabled = true;
+            this.btnSimular.Enabled = true;
+            this.btnFact.Enabled = true;
+            this.btnReemb.Enabled = true;
+            prgBar.Value = 0;
+            //this.prgBar = new ProgressBar();
+        }
+
+        private void crearReembolsos()
+        {
+            resultadosReemb.Clear();
+
+            var Reembhelper = new SAPReembolsoHelper(rCompany);
+            var Reembgrids = ucReemb.GetAllGrids();
+
+            if (Reembgrids.Count < 2)
+            {
+                MessageBox.Show("Debe cargar al menos 2 hojas (Cabecera y Detalle) para la sección de reembolsos.",
                     "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // La primera pestaña = cabecera
-            var gridCabecera = grids[0];
-            // La segunda pestaña = detalle
-            var gridDetalle = grids[1];
+            var ReembgridCabecera = Reembgrids[0];
+            var ReembgridDetalle = Reembgrids[1];
 
-            foreach (DataGridViewRow cabRow in gridCabecera.Rows)
+            InicializarProgressBar(ReembgridCabecera.Rows.Count);
+
+            foreach (DataGridViewRow cabRow in ReembgridCabecera.Rows)
             {
                 if (cabRow.IsNewRow) continue;
+
+                var codigo = cabRow.Cells["Code"].Value?.ToString();
+                string mensaje;
 
                 try
                 {
                     var reembolso = new Reembolso
                     {
-                        Code = cabRow.Cells["Code"].Value?.ToString(),
+                        Code = codigo,
                         Name = cabRow.Cells["Name"].Value?.ToString(),
                         ReembolsoDet = new List<ReembolsoDet>()
                     };
 
-                    // Recorremos detalle
-                    foreach (DataGridViewRow detRow in gridDetalle.Rows)
+                    foreach (DataGridViewRow detRow in ReembgridDetalle.Rows)
                     {
                         if (detRow.IsNewRow) continue;
 
-                        if (cabRow.Cells["Code"].Value?.ToString() == detRow.Cells["Code"].Value?.ToString())
+                        if (codigo == detRow.Cells["Code"].Value?.ToString())
                         {
                             var detalle = new ReembolsoDet
                             {
@@ -251,8 +297,7 @@ namespace CargaReembolso
                                 SS_Est = detRow.Cells["U_SS_Est"].Value?.ToString(),
                                 SS_PtoEmi = detRow.Cells["U_SS_PtoEmi"].Value?.ToString(),
                                 SS_NumAut = detRow.Cells["U_SS_NumAut"].Value?.ToString(),
-                                SS_FecEmi = detRow.Cells["U_SS_FecEmi"].Value == null ? DateTime.MinValue :
-                                       Convert.ToDateTime(detRow.Cells["U_SS_FecEmi"].Value),
+                                SS_FecEmi = Convert.ToDateTime(detRow.Cells["U_SS_FecEmi"].Value),
                                 SS_IVA0 = detRow.Cells["U_SS_IVA0"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["U_SS_IVA0"].Value),
                                 SS_IvaDif0 = detRow.Cells["U_SS_IvaDif0"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["U_SS_IvaDif0"].Value),
                                 SS_NoObjIVA = detRow.Cells["U_SS_NoObjIVA"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["U_SS_NoObjIVA"].Value),
@@ -260,35 +305,321 @@ namespace CargaReembolso
                                 SS_MontoICE = detRow.Cells["U_SS_MontoICE"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["U_SS_MontoICE"].Value),
                                 SS_IvaExe = detRow.Cells["U_SS_IvaExe"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["U_SS_IvaExe"].Value),
                             };
-
                             reembolso.ReembolsoDet.Add(detalle);
                         }
                     }
 
-                    // Guardamos en SAP
-                    string msg;
-                    if (!helper.CrearOActualizarReembolso(reembolso, out msg))
+                    bool exito = Reembhelper.CrearOActualizarReembolso(reembolso, out mensaje);
+
+                    resultadosReemb.Add(new ResultadoTransaccion
                     {
-                        MessageBox.Show(msg, "Error SAP", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else
-                    {
-                        rSboApp.StatusBar.SetText(msg,
-                            SAPbouiCOM.BoMessageTime.bmt_Short,
-                            SAPbouiCOM.BoStatusBarMessageType.smt_Success);
-                    }
+                        Codigo = codigo,
+                        Estado = exito ? "Exitoso" : "Fallido",
+                        Observacion = mensaje
+                    });
+
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error procesando reembolso {cabRow.Cells["Code"].Value}: {ex.Message}",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    resultadosReemb.Add(new ResultadoTransaccion
+                    {
+                        Codigo = codigo,
+                        Estado = "Fallido",
+                        Observacion = ex.Message
+                    });
                 }
+
+                ActualizarProgressBar();
             }
+
+            //prgBar.Visible = false;
         }
+
+
+        private void crearFactura()
+        {
+            resultadosFact.Clear();
+
+            var Facthelper = new SAPFacturaHelper(rCompany);
+            var Factgrids = ucFact.GetAllGrids();
+
+            if (Factgrids.Count < 2)
+            {
+                MessageBox.Show("Debe cargar al menos 2 hojas (Cabecera y Detalle) para la sección de facturas.",
+                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var FactgridCabecera = Factgrids[0];
+            var FactgridDetalle = Factgrids[1];
+
+            foreach (DataGridViewRow cabRow in FactgridCabecera.Rows)
+            {
+                if (cabRow.IsNewRow) continue;
+
+                var codigoReemb = cabRow.Cells["SS_Reembolsos"].Value?.ToString();
+
+                // Evitar crear factura si el reembolso asociado falló
+                if (resultadosReemb.Any(r => r.Codigo == codigoReemb && r.Estado == "Fallido"))
+                {
+                    resultadosFact.Add(new ResultadoTransaccion
+                    {
+                        Codigo = cabRow.Cells["DocEntry"].Value?.ToString(),
+                        Estado = "Fallido",
+                        Observacion = $"No se creó factura porque el reembolso {codigoReemb} falló."
+                    });
+                    continue;
+                }
+
+                string mensaje;
+                try
+                {
+                    var factura = new Factura
+                    {
+                        DocEntry = cabRow.Cells["DocEntry"].Value == null ? 0 : (int)cabRow.Cells["DocEntry"].Value,
+                        CardCode = cabRow.Cells["CardCode"].Value?.ToString(),
+                        DocDate = Convert.ToDateTime(cabRow.Cells["DocDate"].Value),
+                        TaxDate = Convert.ToDateTime(cabRow.Cells["TaxDate"].Value),
+                        DocDueDate = Convert.ToDateTime(cabRow.Cells["DocDueDate"].Value),
+                        Series = (int)cabRow.Cells["Series"].Value,
+                        DocCurrency = cabRow.Cells["DocCurrency"].Value?.ToString(),
+                        Comments = cabRow.Cells["Comments"].Value?.ToString(),
+                        SS_Est = cabRow.Cells["SS_Est"].Value?.ToString(),
+                        SS_Pemi = cabRow.Cells["SS_Pemi"].Value?.ToString(),
+                        SS_TipCom = cabRow.Cells["SS_TipCom"].Value?.ToString(),
+                        SS_FormaPagos = cabRow.Cells["SS_FormPagos"].Value?.ToString(),
+                        SS_Reembolsos = cabRow.Cells["SS_Reembolsos"].Value?.ToString(),
+                        Detalles = new List<FacturaDetalle>()
+                    };
+
+                    foreach (DataGridViewRow detRow in FactgridDetalle.Rows)
+                    {
+                        if (detRow.IsNewRow) continue;
+                        if (cabRow.Cells["Id"].Value?.ToString() == detRow.Cells["Id"].Value?.ToString())
+                        {
+                            var detalle = new FacturaDetalle
+                            {
+                                ItemCode = detRow.Cells["ItemCode"].Value?.ToString(),
+                                Quantity = detRow.Cells["Quantity"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["Quantity"].Value),
+                                Price = detRow.Cells["Price"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["Price"].Value),
+                                DiscPrcnt = detRow.Cells["DiscPrcnt"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["DiscPrcnt"].Value),
+                                TaxCode = detRow.Cells["TaxCode"].Value?.ToString(),
+                                WarehouseCode = detRow.Cells["WarehouseCode"].Value?.ToString()
+                            };
+                            factura.Detalles.Add(detalle);
+                        }
+                    }
+
+                    bool exito = Facthelper.CrearOActualizarFactura(factura, out mensaje);
+
+                    resultadosFact.Add(new ResultadoTransaccion
+                    {
+                        Codigo = factura.DocEntry.ToString(),
+                        Estado = exito ? "Exitoso" : "Fallido",
+                        Observacion = mensaje
+                    });
+                }
+                catch (Exception ex)
+                {
+                    resultadosFact.Add(new ResultadoTransaccion
+                    {
+                        Codigo = cabRow.Cells["DocEntry"].Value?.ToString(),
+                        Estado = "Fallido",
+                        Observacion = ex.Message
+                    });
+                }
+                ActualizarProgressBar();
+            }
+            //prgBar.Visible = false;
+        }
+
 
         private void btnSimular_Click(object sender, EventArgs e)
         {
+            resultadosReemb.Clear();
+            resultadosFact.Clear();
 
+            var Reembhelper = new SAPReembolsoHelper(rCompany);
+            var Facthelper = new SAPFacturaHelper(rCompany);
+
+            // Reembolsos
+            var Reembgrids = ucReemb.GetAllGrids();
+            if (Reembgrids.Count >= 2)
+            {
+                var cabecera = Reembgrids[0];
+                var detalle = Reembgrids[1];
+
+                foreach (DataGridViewRow cabRow in cabecera.Rows)
+                {
+                    if (cabRow.IsNewRow) continue;
+
+                    var codigo = cabRow.Cells["Code"].Value?.ToString();
+                    string mensaje;
+
+                    var reembolso = new Reembolso
+                    {
+                        Code = codigo,
+                        Name = cabRow.Cells["Name"].Value?.ToString(),
+                        ReembolsoDet = new List<ReembolsoDet>()
+                    };
+
+                    foreach (DataGridViewRow detRow in detalle.Rows)
+                    {
+                        if (detRow.IsNewRow) continue;
+                        if (codigo == detRow.Cells["Code"].Value?.ToString())
+                        {
+                            reembolso.ReembolsoDet.Add(new ReembolsoDet
+                            {
+                                Code = detRow.Cells["Code"].Value?.ToString(),
+                                SS_TipoId = detRow.Cells["U_SS_TipoId"].Value?.ToString(),
+                                SS_IdProv = detRow.Cells["U_SS_IdProv"].Value?.ToString(),
+                                SS_TipoComp = detRow.Cells["U_SS_TipoComp"].Value?.ToString(),
+                                SS_FecEmi = Convert.ToDateTime(detRow.Cells["U_SS_FecEmi"].Value)
+                            });
+                        }
+                    }
+
+                    bool valido = Reembhelper.ValidarReembolso(reembolso, out mensaje);
+                    resultadosReemb.Add(new ResultadoTransaccion
+                    {
+                        Codigo = codigo,
+                        Estado = valido ? "Válido" : "Inválido",
+                        Observacion = mensaje
+                    });
+                }
+            }
+
+            // Facturas
+            var Factgrids = ucFact.GetAllGrids();
+            if (Factgrids.Count >= 2)
+            {
+                var cabecera = Factgrids[0];
+                var detalle = Factgrids[1];
+
+                foreach (DataGridViewRow cabRow in cabecera.Rows)
+                {
+                    if (cabRow.IsNewRow) continue;
+
+                    string mensaje;
+                    var factura = new Factura
+                    {
+                        DocEntry = cabRow.Cells["DocEntry"].Value == null ? 0 : (int)cabRow.Cells["DocEntry"].Value,
+                        CardCode = cabRow.Cells["CardCode"].Value?.ToString(),
+                        DocDate = Convert.ToDateTime(cabRow.Cells["DocDate"].Value),
+                        TaxDate = Convert.ToDateTime(cabRow.Cells["TaxDate"].Value),
+                        DocDueDate = Convert.ToDateTime(cabRow.Cells["DocDueDate"].Value),
+                        Detalles = new List<FacturaDetalle>()
+                    };
+
+                    foreach (DataGridViewRow detRow in detalle.Rows)
+                    {
+                        if (detRow.IsNewRow) continue;
+                        if (cabRow.Cells["Id"].Value?.ToString() == detRow.Cells["Id"].Value?.ToString())
+                        {
+                            factura.Detalles.Add(new FacturaDetalle
+                            {
+                                ItemCode = detRow.Cells["ItemCode"].Value?.ToString(),
+                                Quantity = detRow.Cells["Quantity"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["Quantity"].Value)
+                            });
+                        }
+                    }
+
+                    bool valido = Facthelper.ValidarFactura(factura, out mensaje);
+                    resultadosFact.Add(new ResultadoTransaccion
+                    {
+                        Codigo = factura.DocEntry.ToString(),
+                        Estado = valido ? "Válido" : "Inválido",
+                        Observacion = mensaje
+                    });
+                }
+            }
+
+            // Mostrar resultados en la ventana existente
+            var frmResultados = new ResultadosForm(resultadosReemb, resultadosFact);
+            frmResultados.Text = "Resultado procesamiento - Simulación";
+            frmResultados.StartPosition = FormStartPosition.CenterParent;
+            frmResultados.ShowDialog();
+        }
+
+        private void InicializarProgressBar(int max)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => InicializarProgressBar(max)));
+                return;
+            }
+
+            prgBar.Value = 0;
+            prgBar.Minimum = 0;
+            prgBar.Maximum = max;
+            prgBar.Step = 1;
+            prgBar.Visible = true;
+        }
+
+        private void ActualizarProgressBar()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(ActualizarProgressBar));
+                return;
+            }
+
+            if (prgBar.Value < prgBar.Maximum)
+            {
+                prgBar.PerformStep();
+            }
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            if(this.btnConnect.Text == "Conectar")
+            {
+                if (string.IsNullOrEmpty(strConnString))
+                {
+                    MessageBox.Show("El programa se debe ejecutar desde SAP Business One. (Carga Reembolso -Err2)");
+                    Environment.Exit(0);
+                }
+
+                if (ConectarSAP(strConnString))
+                {
+                    this.Text = $"CARGA REEMBOLSOS {rCompany.CompanyName.ToString().ToUpper()}";
+                    //this.btnConnect.Enabled = false;
+                    this.btnConnect.Text = "Desconectar";
+                    this.btnProcesar.Enabled = true;
+                    this.btnSimular.Enabled = true;
+                }
+            }
+            else
+            {
+                try
+                {
+                    if (rCompany != null && rCompany.Connected)
+                    {
+                        rCompany.Disconnect();
+                        rCompany = null;
+                        rSboApp = null;
+                        rSboGui = null;
+                    }
+
+                    this.Text = "CARGA REEMBOLSOS (Desconectado)";
+                    this.btnConnect.Text = "Conectar";
+                    this.btnProcesar.Enabled = false;
+                    this.btnSimular.Enabled = false;
+
+                    //MessageBox.Show("Se ha desconectado de SAP correctamente.",
+                    //                "Desconexión",
+                    //                MessageBoxButtons.OK,
+                    //                MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al desconectarse de SAP: " + ex.Message,
+                                    "Error",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                }
+            }
+            
         }
     }
 }

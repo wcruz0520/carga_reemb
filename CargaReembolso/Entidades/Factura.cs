@@ -8,6 +8,7 @@ namespace CargaReembolso.Entidades
 {
     public class Factura
     {
+        public int DocEntry { get; set; }
         public string CardCode { get; set; }            // Cliente
         public DateTime DocDate { get; set; }           // Fecha contable
         public DateTime TaxDate { get; set; }           // Fecha de impuestos
@@ -16,6 +17,10 @@ namespace CargaReembolso.Entidades
         public string DocCurrency { get; set; }         // Moneda
         public string Comments { get; set; }            // Comentarios
         public string SS_Reembolsos { get; set; }
+        public string SS_Est { get; set; }
+        public string SS_Pemi { get; set; }
+        public string SS_TipCom { get; set; }
+        public string SS_FormaPagos { get; set; }
         public List<FacturaDetalle> Detalles { get; set; } = new List<FacturaDetalle>();
     }
 

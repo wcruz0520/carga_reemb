@@ -34,8 +34,8 @@ namespace CargaReembolso.Interfaces
             this.grdFact = new System.Windows.Forms.DataGridView();
             this.pnl1 = new System.Windows.Forms.Panel();
             this.pnl2 = new System.Windows.Forms.Panel();
-            this.pnl3 = new System.Windows.Forms.Panel();
             this.btnCargar = new System.Windows.Forms.Button();
+            this.pnl3 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.grdFact)).BeginInit();
             this.pnl1.SuspendLayout();
             this.pnl2.SuspendLayout();
@@ -76,6 +76,7 @@ namespace CargaReembolso.Interfaces
             this.grdFact.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdFact.Location = new System.Drawing.Point(10, 10);
             this.grdFact.Name = "grdFact";
+            this.grdFact.RowHeadersVisible = false;
             this.grdFact.RowHeadersWidth = 51;
             this.grdFact.RowTemplate.Height = 28;
             this.grdFact.Size = new System.Drawing.Size(1612, 853);
@@ -102,16 +103,6 @@ namespace CargaReembolso.Interfaces
             this.pnl2.Size = new System.Drawing.Size(1632, 56);
             this.pnl2.TabIndex = 5;
             // 
-            // pnl3
-            // 
-            this.pnl3.Controls.Add(this.grdFact);
-            this.pnl3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnl3.Location = new System.Drawing.Point(0, 100);
-            this.pnl3.Name = "pnl3";
-            this.pnl3.Padding = new System.Windows.Forms.Padding(10);
-            this.pnl3.Size = new System.Drawing.Size(1632, 873);
-            this.pnl3.TabIndex = 6;
-            // 
             // btnCargar
             // 
             this.btnCargar.BackColor = System.Drawing.Color.White;
@@ -125,6 +116,16 @@ namespace CargaReembolso.Interfaces
             this.btnCargar.Text = "...";
             this.btnCargar.UseVisualStyleBackColor = false;
             this.btnCargar.Click += new System.EventHandler(this.btnCargar_Click);
+            // 
+            // pnl3
+            // 
+            this.pnl3.Controls.Add(this.grdFact);
+            this.pnl3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnl3.Location = new System.Drawing.Point(0, 100);
+            this.pnl3.Name = "pnl3";
+            this.pnl3.Padding = new System.Windows.Forms.Padding(10);
+            this.pnl3.Size = new System.Drawing.Size(1632, 873);
+            this.pnl3.TabIndex = 6;
             // 
             // FactInterface
             // 

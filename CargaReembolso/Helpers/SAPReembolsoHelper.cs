@@ -99,6 +99,56 @@ namespace CargaReembolso.Helpers
             }
         }
 
+        public bool ValidarReembolso(Reembolso reembolso, out string mensaje)
+        {
+            mensaje = "";
+
+            try
+            {
+                if (string.IsNullOrEmpty(reembolso.Code))
+                {
+                    mensaje = "El campo Code es obligatorio.";
+                    return false;
+                }
+
+                if (string.IsNullOrEmpty(reembolso.Name))
+                {
+                    mensaje = "El campo Name es obligatorio.";
+                    return false;
+                }
+
+                if (reembolso.ReembolsoDet == null || reembolso.ReembolsoDet.Count == 0)
+                {
+                    mensaje = $"El reembolso {reembolso.Code} no tiene detalles.";
+                    return false;
+                }
+
+                foreach (var det in reembolso.ReembolsoDet)
+                {
+                    if (string.IsNullOrEmpty(det.SS_TipoId) || string.IsNullOrEmpty(det.SS_IdProv))
+                    {
+                        mensaje = $"El detalle del reembolso {reembolso.Code} tiene campos obligatorios vacíos.";
+                        return false;
+                    }
+
+                    if (det.SS_FecEmi == DateTime.MinValue)
+                    {
+                        mensaje = $"El detalle del reembolso {reembolso.Code} tiene una fecha inválida.";
+                        return false;
+                    }
+                }
+
+                mensaje = $"Reembolso {reembolso.Code} válido.";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                mensaje = $"Error validando reembolso {reembolso.Code}. Exception: {ex.Message}";
+                return false;
+            }
+        }
+
+
         // Convierte cualquier valor numérico a double seguro, devuelve 0 si es null o inválido
         private double SafeDouble(decimal? value)
         {

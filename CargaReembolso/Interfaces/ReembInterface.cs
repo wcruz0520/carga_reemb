@@ -91,7 +91,8 @@ namespace CargaReembolso.Interfaces
                         ReadOnly = false,
                         AllowUserToAddRows = false,
                         DataSource = table,
-                        BackgroundColor = Color.White
+                        BackgroundColor = Color.White,
+                        RowHeadersVisible = false
                     };
                     page.Controls.Add(grid);
                     tabs.TabPages.Add(page);
@@ -114,6 +115,7 @@ namespace CargaReembolso.Interfaces
                 tabs.TabPages.Clear();
                 parent.Controls.Remove(tabs);
                 placeholderGrid.Visible = true; // mostramos de nuevo el grid original
+                placeholderGrid.RowHeadersVisible = false;
             }
 
             // Limpiamos también el grid placeholder

@@ -91,7 +91,8 @@ namespace CargaReembolso.Interfaces
                         ReadOnly = false,
                         AllowUserToAddRows = false,
                         DataSource = table,
-                        BackgroundColor = Color.White
+                        BackgroundColor = Color.White,
+                        RowHeadersVisible = false
                     };
                     page.Controls.Add(grid);
                     tabs.TabPages.Add(page);
@@ -114,11 +115,46 @@ namespace CargaReembolso.Interfaces
                 tabs.TabPages.Clear();
                 parent.Controls.Remove(tabs);
                 placeholderGrid.Visible = true; // mostramos de nuevo el grid original
+                placeholderGrid.RowHeadersVisible = false;
             }
 
             // Limpiamos también el grid placeholder
             placeholderGrid.DataSource = null;
             placeholderGrid.Rows.Clear();
+        }
+
+        public List<DataGridView> GetAllGrids()
+        {
+            var grids = new List<DataGridView>();
+
+            // Buscar todos los TabControl dentro del UserControl (en todos los niveles)
+            foreach (var tabControl in FindControlsRecursive<TabControl>(this))
+            {
+                foreach (TabPage tab in tabControl.TabPages)
+                {
+                    grids.AddRange(tab.Controls.OfType<DataGridView>());
+                }
+            }
+
+            // Si no hay tabs, usar el grid placeholder
+            if (grids.Count == 0 && grdFact.Visible && grdFact.DataSource != null)
+            {
+                grids.Add(grdFact);
+            }
+
+            return grids;
+        }
+
+        private IEnumerable<T> FindControlsRecursive<T>(Control parent) where T : Control
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is T typed)
+                    yield return typed;
+
+                foreach (var child in FindControlsRecursive<T>(control))
+                    yield return child;
+            }
         }
     }
 }

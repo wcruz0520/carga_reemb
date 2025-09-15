@@ -111,6 +111,7 @@
     </Compile>
     <Compile Include="Entidades\Factura.cs" />
     <Compile Include="Entidades\Reembolso.cs" />
+    <Compile Include="Entidades\ResultadoTransaccion.cs" />
     <Compile Include="Helpers\SAPFacturaHelper.cs" />
     <Compile Include="Helpers\SAPReembolsoHelper.cs" />
     <Compile Include="Interfaces\FactInterface.cs">
@@ -127,6 +128,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\ResultadosForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ResultadosForm.Designer.cs">
+      <DependentUpon>ResultadosForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CargaReemForm.resx">
       <DependentUpon>CargaReemForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -146,6 +153,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Views\ResultadosForm.resx">
+      <DependentUpon>ResultadosForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -165,6 +175,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LogoV3.ico" />
+    <None Include="Resources\connect.png" />
+    <None Include="Resources\conexion.png" />
     <None Include="Resources\LogoV2.ico" />
     <None Include="Resources\LogoV3.ico" />
   </ItemGroup>

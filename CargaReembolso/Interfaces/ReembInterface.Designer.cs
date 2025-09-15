@@ -121,6 +121,7 @@ namespace CargaReembolso.Interfaces
             this.grdReemb.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdReemb.Location = new System.Drawing.Point(10, 10);
             this.grdReemb.Name = "grdReemb";
+            this.grdReemb.RowHeadersVisible = false;
             this.grdReemb.RowHeadersWidth = 51;
             this.grdReemb.RowTemplate.Height = 28;
             this.grdReemb.Size = new System.Drawing.Size(1612, 753);
