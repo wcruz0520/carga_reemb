@@ -34,12 +34,10 @@ namespace CargaReembolso.Interfaces
             this.btnCargar = new System.Windows.Forms.Button();
             this.btnLimpiar = new System.Windows.Forms.Button();
             this.pnl1 = new System.Windows.Forms.Panel();
-            this.grdFact = new System.Windows.Forms.DataGridView();
             this.pnl3 = new System.Windows.Forms.Panel();
             this.grdReemb = new System.Windows.Forms.DataGridView();
             this.pnl2.SuspendLayout();
             this.pnl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdFact)).BeginInit();
             this.pnl3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdReemb)).BeginInit();
             this.SuspendLayout();
@@ -105,19 +103,6 @@ namespace CargaReembolso.Interfaces
             this.pnl1.Size = new System.Drawing.Size(1632, 44);
             this.pnl1.TabIndex = 7;
             // 
-            // grdFact
-            // 
-            this.grdFact.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.grdFact.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.grdFact.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdFact.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grdFact.Location = new System.Drawing.Point(0, 0);
-            this.grdFact.Name = "grdFact";
-            this.grdFact.RowHeadersWidth = 51;
-            this.grdFact.RowTemplate.Height = 28;
-            this.grdFact.Size = new System.Drawing.Size(1632, 873);
-            this.grdFact.TabIndex = 6;
-            // 
             // pnl3
             // 
             this.pnl3.Controls.Add(this.grdReemb);
@@ -149,13 +134,11 @@ namespace CargaReembolso.Interfaces
             this.Controls.Add(this.pnl3);
             this.Controls.Add(this.pnl2);
             this.Controls.Add(this.pnl1);
-            this.Controls.Add(this.grdFact);
             this.Name = "ReembInterface";
             this.Size = new System.Drawing.Size(1632, 873);
             this.pnl2.ResumeLayout(false);
             this.pnl1.ResumeLayout(false);
             this.pnl1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grdFact)).EndInit();
             this.pnl3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdReemb)).EndInit();
             this.ResumeLayout(false);
@@ -169,7 +152,7 @@ namespace CargaReembolso.Interfaces
         private System.Windows.Forms.Button btnCargar;
         private System.Windows.Forms.Button btnLimpiar;
         private System.Windows.Forms.Panel pnl1;
-        private System.Windows.Forms.DataGridView grdFact;
+        //private System.Windows.Forms.DataGridView grdFact;
         private System.Windows.Forms.Panel pnl3;
         private System.Windows.Forms.DataGridView grdReemb;
     }

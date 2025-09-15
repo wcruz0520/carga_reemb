@@ -121,5 +121,39 @@ namespace CargaReembolso.Interfaces
             placeholderGrid.Rows.Clear();
         }
 
+        public List<DataGridView> GetAllGrids()
+        {
+            var grids = new List<DataGridView>();
+
+            // Buscar todos los TabControl dentro del UserControl (en todos los niveles)
+            foreach (var tabControl in FindControlsRecursive<TabControl>(this))
+            {
+                foreach (TabPage tab in tabControl.TabPages)
+                {
+                    grids.AddRange(tab.Controls.OfType<DataGridView>());
+                }
+            }
+
+            // Si no hay tabs, usar el grid placeholder
+            if (grids.Count == 0 && grdReemb.Visible && grdReemb.DataSource != null)
+            {
+                grids.Add(grdReemb);
+            }
+
+            return grids;
+        }
+
+        private IEnumerable<T> FindControlsRecursive<T>(Control parent) where T : Control
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is T typed)
+                    yield return typed;
+
+                foreach (var child in FindControlsRecursive<T>(control))
+                    yield return child;
+            }
+        }
+
     }
 }

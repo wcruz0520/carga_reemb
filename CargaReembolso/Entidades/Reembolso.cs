@@ -6,27 +6,28 @@ using System.Threading.Tasks;
 
 namespace CargaReembolso.Entidades
 {
-    class Reembolso
+    public class Reembolso
     {
-        public string code;
-        public List<ReembolsoDet> reembolsodet;
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public List<ReembolsoDet> ReembolsoDet { get; set; } = new List<ReembolsoDet>();
     }
 
-    class ReembolsoDet
+    public class ReembolsoDet
     {
-        string code;
-        string SS_TipoId;
-        string SS_IdProv;
-        string SS_TipoComp;
-        string SS_Est;
-        string SS_PtoEmi;
-        string SS_NumAut;
-        DateTime SS_FecEmi;
-        decimal SS_IVA0;
-        decimal SS_IvaDif0;
-        decimal SS_NoObjIVA;
-        decimal SS_MontoIVA;
-        decimal SS_MontoICE;
-        decimal SS_IvaExe;
+        public string Code { get; set; }
+        public string SS_TipoId { get; set; }
+        public string SS_IdProv { get; set; }
+        public string SS_TipoComp { get; set; }
+        public string SS_Est { get; set; }
+        public string SS_PtoEmi { get; set; }
+        public string SS_NumAut { get; set; }
+        public DateTime SS_FecEmi { get; set; }
+        public decimal SS_IVA0 { get; set; }
+        public decimal SS_IvaDif0 { get; set; }
+        public decimal SS_NoObjIVA { get; set; }
+        public decimal SS_MontoIVA { get; set; }
+        public decimal SS_MontoICE { get; set; }
+        public decimal SS_IvaExe { get; set; }
     }
 }

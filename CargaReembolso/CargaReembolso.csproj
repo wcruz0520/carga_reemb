@@ -112,6 +112,7 @@
     <Compile Include="Controllers\ReembolsoController.cs" />
     <Compile Include="Entidades\Factura.cs" />
     <Compile Include="Entidades\Reembolso.cs" />
+    <Compile Include="Helpers\SAPReembolsoHelper.cs" />
     <Compile Include="Interfaces\FactInterface.cs">
       <SubType>UserControl</SubType>
     </Compile>
