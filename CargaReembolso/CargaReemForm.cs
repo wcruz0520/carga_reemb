@@ -17,6 +17,7 @@ using CargaReembolso.Helpers;
 using CargaReembolso.Entidades;
 using CargaReembolso.Views;
 using SAPbobsCOM;
+using FontAwesome.Sharp;
 
 namespace CargaReembolso
 {
@@ -88,6 +89,14 @@ namespace CargaReembolso
 
             ucFact.Dock = DockStyle.Fill;
             ucReemb.Dock = DockStyle.Fill;
+
+            //btnPrueba.Text = "Procesar";
+            //btnPrueba.IconChar = IconChar.Play;   // Ícono de "Play"
+            //btnPrueba.IconColor = Color.Green;    // Color del ícono
+            //btnPrueba.IconSize = 32;              // Tamaño del ícono
+            //btnPrueba.TextImageRelation = TextImageRelation.ImageBeforeText;
+            //btnPrueba.Size = new Size(150, 40);
+            //btnPrueba.Location = new Point(20, 20);
 
             MostrarUserControl(ucReemb, btnReemb);
 

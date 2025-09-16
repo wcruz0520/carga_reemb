@@ -28,3 +28,4 @@ C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaR
 C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaReembolso.Interfaces.FactInterface.resources
 C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaReembolso.Interfaces.ReembInterface.resources
 C:\Users\William\source\repos\CargaReembolso\CargaReembolso\obj\x64\Debug\CargaReembolso.Views.ResultadosForm.resources
+C:\Users\William\source\repos\CargaReembolso\CargaReembolso\bin\x64\Debug\FontAwesome.Sharp.dll
