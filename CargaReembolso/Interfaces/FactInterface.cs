@@ -49,7 +49,8 @@ namespace CargaReembolso.Interfaces
             {
                 Name = tabName,
                 Bounds = placeholderGrid.Bounds,
-                Anchor = placeholderGrid.Anchor
+                Anchor = placeholderGrid.Anchor,
+                Dock = DockStyle.Fill
             };
             parent.Controls.Add(tabs);
             tabs.BringToFront();
@@ -116,6 +117,7 @@ namespace CargaReembolso.Interfaces
                 parent.Controls.Remove(tabs);
                 placeholderGrid.Visible = true; // mostramos de nuevo el grid original
                 placeholderGrid.RowHeadersVisible = false;
+                Dock = DockStyle.Fill;
             }
 
             // Limpiamos también el grid placeholder

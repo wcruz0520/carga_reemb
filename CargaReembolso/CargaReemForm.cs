@@ -16,6 +16,7 @@ using CargaReembolso.Interfaces;
 using CargaReembolso.Helpers;
 using CargaReembolso.Entidades;
 using CargaReembolso.Views;
+using SAPbobsCOM;
 
 namespace CargaReembolso
 {
@@ -31,7 +32,7 @@ namespace CargaReembolso
 
         public SAPbouiCOM.Application rSboApp;
         public SAPbouiCOM.SboGuiApi rSboGui;
-        public SAPbobsCOM.Company rCompany;
+        //public static SAPbobsCOM.Company rCompany;
 
         private const string UDO_CODE = "SS_REEMCAB";
         private const string HEADER_TABLE = "@SS_REEMCAB";
@@ -61,7 +62,11 @@ namespace CargaReembolso
             this.btnConnect.Enabled = true;
 
             strTest = Environment.GetCommandLineArgs();
-            strConnString = ObtenerCadenaConexion(strTest);
+
+            //Comentado para testear
+            //strConnString = ObtenerCadenaConexion(strTest);
+
+            strConnString = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
 
             if (string.IsNullOrEmpty(strConnString))
             {
@@ -71,7 +76,7 @@ namespace CargaReembolso
 
             if (ConectarSAP(strConnString))
             {
-                this.Text = $"CARGA REEMBOLSOS {rCompany.CompanyName.ToString().ToUpper()}";
+                this.Text = $"CARGA REEMBOLSOS {Globals.rCompany.CompanyName.ToString().ToUpper()}";
                 //this.btnConnect.Enabled = false;
                 this.btnConnect.Text = "Desconectar";
                 this.btnProcesar.Enabled = true;
@@ -123,55 +128,58 @@ namespace CargaReembolso
         }
 
         /// <summary>
-        /// Conecta con SAP y obtiene la compañía
+        /// Conecta con SAP y obtiene la compañía usando UI API -> DI API (método robusto)
         /// </summary>
         private bool ConectarSAP(string connectionString)
         {
             try
             {
                 rSboGui = new SAPbouiCOM.SboGuiApi();
-                rCompany = new SAPbobsCOM.Company();
-
                 rSboGui.Connect(connectionString);
                 rSboApp = rSboGui.GetApplication();
 
-                if (conectarse)
+                // Crear objeto company desde cero
+                Globals.rCompany = new SAPbobsCOM.Company();
+
+                // Obtener cookie de contexto
+                sCookie = Globals.rCompany.GetContextCookie();
+
+                // Pasar el contexto de la sesión UI al objeto Company
+                ret = Globals.rCompany.SetSboLoginContext(rSboApp.Company.GetConnectionContext(sCookie));
+                if (ret != 0)
                 {
-                    rCompany = rSboApp.Company.GetDICompany();
+                    rSboApp.StatusBar.SetText("Error SetSboLoginContext: " + ret,
+                        SAPbouiCOM.BoMessageTime.bmt_Medium,
+                        SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+                    return false;
                 }
-                else
+
+                // Conectar usando ese contexto
+                ret = Globals.rCompany.Connect();
+                if (ret != 0)
                 {
-                    sCookie = rCompany.GetContextCookie();
-                    ret = rCompany.SetSboLoginContext(rSboApp.Company.GetConnectionContext(sCookie));
-                    if (ret == 0)
-                    {
-                        ret = rCompany.Connect();
-                        if (ret != 0)
-                        {
-                            rCompany.GetLastError(out ret, out strSQL);
-                            rSboApp.StatusBar.SetText("Error al Conectar el programa Carga Reembolso: " + strSQL,
-                                SAPbouiCOM.BoMessageTime.bmt_Medium,
-                                SAPbouiCOM.BoStatusBarMessageType.smt_Error);
-                            Environment.Exit(0);
-                        }
-                    }
-                    else
-                    {
-                        rSboApp.StatusBar.SetText("No se ha Conectado con programa Carga Reembolso: Error " + ret,
-                            SAPbouiCOM.BoMessageTime.bmt_Short,
-                            SAPbouiCOM.BoStatusBarMessageType.smt_Error);
-                        Environment.Exit(0);
-                    }
+                    Globals.rCompany.GetLastError(out int errorCode, out string errorMsg);
+                    rSboApp.StatusBar.SetText("Error al conectar DI API: " + errorMsg,
+                        SAPbouiCOM.BoMessageTime.bmt_Medium,
+                        SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+                    return false;
                 }
+
+                // Si todo va bien, mostrar info
+                rSboApp.StatusBar.SetText($"Conectado a {Globals.rCompany.CompanyName} ({Globals.rCompany.CompanyDB})",
+                    SAPbouiCOM.BoMessageTime.bmt_Short,
+                    SAPbouiCOM.BoStatusBarMessageType.smt_Success);
 
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error conectando a SAP: " + ex.Message);
+                MessageBox.Show("Error conectando a SAP: " + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
+
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -219,20 +227,26 @@ namespace CargaReembolso
         private async void btnProcesar_Click(object sender, EventArgs e)
         {
             var Factgrids_valid = ucFact.GetAllGrids();
+            var Reembgrids_valid = ucReemb.GetAllGrids();
             this.btnConnect.Enabled = false;
             this.btnSimular.Enabled = false;
             this.btnFact.Enabled = false;
             this.btnReemb.Enabled = false;
 
-            // Ejecutar en otro hilo
-            await Task.Run(() =>
+            //await Task.Run(() =>
+            //{
+            //    crearReembolsos();
+            //});
+
+            if (Reembgrids_valid.Count >= 1)
             {
                 crearReembolsos();
-                if (Factgrids_valid.Count >= 1)
-                {
-                    crearFactura();
-                }
-            });
+            }
+            
+            if (Factgrids_valid.Count >= 1)
+            {
+                crearFactura();
+            }
 
             var frmResultados = new ResultadosForm(resultadosReemb, resultadosFact);
             frmResultados.Text = "Resultado procesamiento - Real";
@@ -251,7 +265,7 @@ namespace CargaReembolso
         {
             resultadosReemb.Clear();
 
-            var Reembhelper = new SAPReembolsoHelper(rCompany);
+            var Reembhelper = new SAPReembolsoHelper(Globals.rCompany);
             var Reembgrids = ucReemb.GetAllGrids();
 
             if (Reembgrids.Count < 2)
@@ -335,12 +349,11 @@ namespace CargaReembolso
             //prgBar.Visible = false;
         }
 
-
         private void crearFactura()
         {
             resultadosFact.Clear();
 
-            var Facthelper = new SAPFacturaHelper(rCompany);
+            var Facthelper = new SAPFacturaHelper(Globals.rCompany);
             var Factgrids = ucFact.GetAllGrids();
 
             if (Factgrids.Count < 2)
@@ -357,7 +370,7 @@ namespace CargaReembolso
             {
                 if (cabRow.IsNewRow) continue;
 
-                var codigoReemb = cabRow.Cells["SS_Reembolsos"].Value?.ToString();
+                var codigoReemb = cabRow.Cells["U_SS_Reembolsos"].Value?.ToString();
 
                 // Evitar crear factura si el reembolso asociado falló
                 if (resultadosReemb.Any(r => r.Codigo == codigoReemb && r.Estado == "Fallido"))
@@ -372,25 +385,47 @@ namespace CargaReembolso
                 }
 
                 string mensaje;
+                                
                 try
                 {
-                    var factura = new Factura
+                    Factura factura = null;
+
+                    try
                     {
-                        DocEntry = cabRow.Cells["DocEntry"].Value == null ? 0 : (int)cabRow.Cells["DocEntry"].Value,
-                        CardCode = cabRow.Cells["CardCode"].Value?.ToString(),
-                        DocDate = Convert.ToDateTime(cabRow.Cells["DocDate"].Value),
-                        TaxDate = Convert.ToDateTime(cabRow.Cells["TaxDate"].Value),
-                        DocDueDate = Convert.ToDateTime(cabRow.Cells["DocDueDate"].Value),
-                        Series = (int)cabRow.Cells["Series"].Value,
-                        DocCurrency = cabRow.Cells["DocCurrency"].Value?.ToString(),
-                        Comments = cabRow.Cells["Comments"].Value?.ToString(),
-                        SS_Est = cabRow.Cells["SS_Est"].Value?.ToString(),
-                        SS_Pemi = cabRow.Cells["SS_Pemi"].Value?.ToString(),
-                        SS_TipCom = cabRow.Cells["SS_TipCom"].Value?.ToString(),
-                        SS_FormaPagos = cabRow.Cells["SS_FormPagos"].Value?.ToString(),
-                        SS_Reembolsos = cabRow.Cells["SS_Reembolsos"].Value?.ToString(),
-                        Detalles = new List<FacturaDetalle>()
-                    };
+                        factura = new Factura
+                        {
+                            Id = TryGet(() => Convert.ToInt32(cabRow.Cells["Id"].Value), "Id", obligatorio: true),
+                            DocEntry = TryGet(() =>
+                            (cabRow.Cells["DocEntry"].Value == null || cabRow.Cells["DocEntry"].Value == DBNull.Value)
+                                ? (int?)null
+                                : Convert.ToInt32(cabRow.Cells["DocEntry"].Value),
+                            "DocEntry", obligatorio: false),
+                            CardCode = TryGet(() => cabRow.Cells["CardCode"].Value?.ToString(), "CardCode"),
+                            DocDate = TryGet(() => Convert.ToDateTime(cabRow.Cells["DocDate"].Value), "DocDate"),
+                            TaxDate = TryGet(() => Convert.ToDateTime(cabRow.Cells["TaxDate"].Value), "TaxDate"),
+                            DocDueDate = TryGet(() => Convert.ToDateTime(cabRow.Cells["DocDueDate"].Value), "DocDueDate"),
+                            Series = TryGet(() => Convert.ToInt32(cabRow.Cells["Series"].Value), "Series"),
+                            DocCurrency = TryGet(() => cabRow.Cells["DocCurrency"].Value?.ToString(), "DocCurrency"),
+                            DocType = TryGet(() => ConvertToDocType(cabRow.Cells["DocType"].Value), "DocType"),
+                            HandWritten = TryGet(() => ConvertToYesNo(cabRow.Cells["HandWritten"].Value), "HandWritten"),
+                            Comments = TryGet(() => cabRow.Cells["Comments"].Value?.ToString(), "Comments"),
+                            SS_Est = TryGet(() => cabRow.Cells["U_SS_Est"].Value?.ToString(), "SS_Est"),
+                            SS_Pemi = TryGet(() => cabRow.Cells["U_SS_Pemi"].Value?.ToString(), "SS_Pemi"),
+                            SS_TipCom = TryGet(() => cabRow.Cells["U_SS_TipCom"].Value?.ToString(), "SS_TipCom"),
+                            SS_FormaPagos = TryGet(() => cabRow.Cells["U_SS_FormaPagos"].Value?.ToString(), "SS_FormaPagos"),
+                            SS_Reembolsos = TryGet(() => cabRow.Cells["U_SS_Reembolsos"].Value?.ToString(), "SS_Reembolsos"),
+                            SS_CONTRATO = TryGet(() => cabRow.Cells["U_SS_CONTRATO"].Value?.ToString(), "SS_CONTRATO"),
+                            SSCONTRATO = TryGet(() => Convert.ToInt32(cabRow.Cells["U_SSCONTRATO"].Value), "SSCONTRATO"),
+                            SSLOCAL = TryGet(() => cabRow.Cells["U_SSLOCAL"].Value?.ToString(), "SSLOCAL"),
+                            Denominacion = TryGet(() => cabRow.Cells["U_Denominacion"].Value?.ToString(), "Denominacion"),
+                            Detalles = new List<FacturaDetalle>()
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error al asignar propiedad de Factura: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
                     foreach (DataGridViewRow detRow in FactgridDetalle.Rows)
                     {
@@ -404,7 +439,7 @@ namespace CargaReembolso
                                 Price = detRow.Cells["Price"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["Price"].Value),
                                 DiscPrcnt = detRow.Cells["DiscPrcnt"].Value == null ? 0 : Convert.ToDecimal(detRow.Cells["DiscPrcnt"].Value),
                                 TaxCode = detRow.Cells["TaxCode"].Value?.ToString(),
-                                WarehouseCode = detRow.Cells["WarehouseCode"].Value?.ToString()
+                                WarehouseCode = detRow.Cells["WhsCode"].Value?.ToString()
                             };
                             factura.Detalles.Add(detalle);
                         }
@@ -414,7 +449,7 @@ namespace CargaReembolso
 
                     resultadosFact.Add(new ResultadoTransaccion
                     {
-                        Codigo = factura.DocEntry.ToString(),
+                        Codigo = factura.Id.ToString(),
                         Estado = exito ? "Exitoso" : "Fallido",
                         Observacion = mensaje
                     });
@@ -423,7 +458,7 @@ namespace CargaReembolso
                 {
                     resultadosFact.Add(new ResultadoTransaccion
                     {
-                        Codigo = cabRow.Cells["DocEntry"].Value?.ToString(),
+                        Codigo = cabRow.Cells["Id"].Value?.ToString(),
                         Estado = "Fallido",
                         Observacion = ex.Message
                     });
@@ -433,14 +468,13 @@ namespace CargaReembolso
             //prgBar.Visible = false;
         }
 
-
         private void btnSimular_Click(object sender, EventArgs e)
         {
             resultadosReemb.Clear();
             resultadosFact.Clear();
 
-            var Reembhelper = new SAPReembolsoHelper(rCompany);
-            var Facthelper = new SAPFacturaHelper(rCompany);
+            var Reembhelper = new SAPReembolsoHelper(Globals.rCompany);
+            var Facthelper = new SAPFacturaHelper(Globals.rCompany);
 
             // Reembolsos
             var Reembgrids = ucReemb.GetAllGrids();
@@ -582,7 +616,7 @@ namespace CargaReembolso
 
                 if (ConectarSAP(strConnString))
                 {
-                    this.Text = $"CARGA REEMBOLSOS {rCompany.CompanyName.ToString().ToUpper()}";
+                    this.Text = $"CARGA REEMBOLSOS {Globals.rCompany.CompanyName.ToString().ToUpper()}";
                     //this.btnConnect.Enabled = false;
                     this.btnConnect.Text = "Desconectar";
                     this.btnProcesar.Enabled = true;
@@ -593,10 +627,10 @@ namespace CargaReembolso
             {
                 try
                 {
-                    if (rCompany != null && rCompany.Connected)
+                    if (Globals.rCompany != null && Globals.rCompany.Connected)
                     {
-                        rCompany.Disconnect();
-                        rCompany = null;
+                        Globals.rCompany.Disconnect();
+                        Globals.rCompany = null;
                         rSboApp = null;
                         rSboGui = null;
                     }
@@ -621,5 +655,76 @@ namespace CargaReembolso
             }
             
         }
+
+        private BoDocumentTypes? ConvertToDocType(object value)
+        {
+            if (value == null || value == DBNull.Value)
+                return null;
+
+            // Si viene como string
+            if (value is string str)
+            {
+                if (Enum.TryParse(str, true, out BoDocumentTypes result))
+                    return result;
+
+                if (int.TryParse(str, out int intVal))
+                    return (BoDocumentTypes)intVal;
+            }
+
+            // Si viene como número (int)
+            if (value is int intValue)
+                return (BoDocumentTypes)intValue;
+
+            // Si ya viene como enum
+            if (value is BoDocumentTypes enumValue)
+                return enumValue;
+
+            return null;
+        }
+
+        private BoYesNoEnum? ConvertToYesNo(object value)
+        {
+            if (value == null || value == DBNull.Value)
+                return null;
+
+            if (value is string str)
+            {
+                str = str.Trim().ToLowerInvariant();
+                if (str == "y" || str == "s" || str == "yes" || str == "si" || str == "true" || str == "1")
+                    return BoYesNoEnum.tYES;
+                if (str == "n" || str == "no" || str == "false" || str == "0")
+                    return BoYesNoEnum.tNO;
+
+                if (Enum.TryParse(str, true, out BoYesNoEnum result))
+                    return result;
+            }
+
+            if (value is int intValue)
+                return (BoYesNoEnum)intValue;
+
+            if (value is bool boolValue)
+                return boolValue ? BoYesNoEnum.tYES : BoYesNoEnum.tNO;
+
+            if (value is BoYesNoEnum enumValue)
+                return enumValue;
+
+            return null;
+        }
+
+        private T TryGet<T>(Func<T> getter, string fieldName, bool obligatorio = false)
+        {
+            try
+            {
+                var value = getter();
+                if (obligatorio && (value == null || (value is string s && string.IsNullOrWhiteSpace(s))))
+                    throw new Exception($"El campo {fieldName} es obligatorio y no puede estar vacío.");
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al leer el campo {fieldName}: {ex.Message}");
+            }
+        }
+
     }
 }

@@ -50,12 +50,12 @@ namespace CargaReembolso
             // 
             // btnProcesar
             // 
-            this.btnProcesar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.btnProcesar.BackColor = System.Drawing.Color.ForestGreen;
+            this.btnProcesar.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnProcesar.FlatAppearance.BorderSize = 0;
             this.btnProcesar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProcesar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnProcesar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.btnProcesar.Location = new System.Drawing.Point(3, 4);
             this.btnProcesar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnProcesar.Name = "btnProcesar";
@@ -80,6 +80,7 @@ namespace CargaReembolso
             this.btnSimular.TabIndex = 2;
             this.btnSimular.Text = "SIMULAR";
             this.btnSimular.UseVisualStyleBackColor = false;
+            this.btnSimular.Visible = false;
             this.btnSimular.Click += new System.EventHandler(this.btnSimular_Click);
             // 
             // pictureBox1
@@ -117,7 +118,7 @@ namespace CargaReembolso
             this.tableLayoutPanel2.Controls.Add(this.btnProcesar, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.prgBar, 3, 0);
             this.tableLayoutPanel2.Controls.Add(this.pictureBox1, 3, 1);
-            this.tableLayoutPanel2.Controls.Add(this.btnConnect, 2, 1);
+            this.tableLayoutPanel2.Controls.Add(this.btnConnect, 2, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(5, 5);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -138,14 +139,14 @@ namespace CargaReembolso
             // btnConnect
             // 
             this.btnConnect.BackColor = System.Drawing.Color.White;
-            this.btnConnect.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnConnect.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnConnect.FlatAppearance.BorderSize = 0;
             this.btnConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnConnect.Image = global::CargaReembolso.Properties.Resources.connect;
-            this.btnConnect.Location = new System.Drawing.Point(894, 49);
+            this.btnConnect.Location = new System.Drawing.Point(567, 3);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(195, 41);
+            this.btnConnect.Size = new System.Drawing.Size(195, 40);
             this.btnConnect.TabIndex = 14;
             this.btnConnect.Text = "Conectar";
             this.btnConnect.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
