@@ -84,12 +84,20 @@ namespace CargaReembolso.Helpers
                     }
                 }
 
-                if (exists)
-                    generalService.Update(oGeneralData);
-                else
-                    generalService.Add(oGeneralData);
+                string tipo = "no procesado";
 
-                mensaje = $"Reembolso {reembolso.Code} procesado correctamente";
+                if (exists)
+                {
+                    generalService.Update(oGeneralData);
+                    tipo = "actualizado";
+                } 
+                else
+                {
+                    generalService.Add(oGeneralData);
+                    tipo = "creado";
+                }
+                  
+                mensaje = $"Reembolso {reembolso.Code} {tipo} correctamente";
                 return true;
             }
             catch (Exception ex)

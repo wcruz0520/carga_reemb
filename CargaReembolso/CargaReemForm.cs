@@ -233,16 +233,15 @@ namespace CargaReembolso
             this.btnFact.Enabled = false;
             this.btnReemb.Enabled = false;
 
-            //await Task.Run(() =>
-            //{
-            //    crearReembolsos();
-            //});
-
             if (Reembgrids_valid.Count >= 1)
             {
-                crearReembolsos();
+                //crearReembolsos();
+                await Task.Run(() =>
+                {
+                    crearReembolsos();
+                });
             }
-            
+
             if (Factgrids_valid.Count >= 1)
             {
                 crearFactura();
@@ -305,6 +304,7 @@ namespace CargaReembolso
                             var detalle = new ReembolsoDet
                             {
                                 Code = detRow.Cells["Code"].Value?.ToString(),
+                                //LineId = (int?)detRow.Cells["LineId"].Value,
                                 SS_TipoId = detRow.Cells["U_SS_TipoId"].Value?.ToString(),
                                 SS_IdProv = detRow.Cells["U_SS_IdProv"].Value?.ToString(),
                                 SS_TipoComp = detRow.Cells["U_SS_TipoComp"].Value?.ToString(),

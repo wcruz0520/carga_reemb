@@ -175,12 +175,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\LogoSS.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="LogoV3.ico" />
-    <None Include="Resources\connect.png" />
+    <None Include="Resources\LogoSS.png" />
     <None Include="Resources\conexion.png" />
+    <None Include="Resources\execute.png" />
+    <None Include="Resources\refresh.png" />
+    <None Include="Resources\upload_icon.png" />
+    <None Include="Resources\upload_icon_redim.png" />
+    <None Include="Resources\connect.png" />
     <None Include="Resources\LogoV2.ico" />
     <None Include="Resources\LogoV3.ico" />
   </ItemGroup>

@@ -16,6 +16,7 @@ namespace CargaReembolso.Entidades
     public class ReembolsoDet
     {
         public string Code { get; set; }
+        //public int? LineId { get; set; }
         public string SS_TipoId { get; set; }
         public string SS_IdProv { get; set; }
         public string SS_TipoComp { get; set; }

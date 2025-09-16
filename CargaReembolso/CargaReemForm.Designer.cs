@@ -50,18 +50,20 @@ namespace CargaReembolso
             // 
             // btnProcesar
             // 
-            this.btnProcesar.BackColor = System.Drawing.Color.ForestGreen;
+            this.btnProcesar.BackColor = System.Drawing.Color.White;
             this.btnProcesar.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnProcesar.FlatAppearance.BorderSize = 0;
             this.btnProcesar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProcesar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnProcesar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnProcesar.Location = new System.Drawing.Point(3, 4);
-            this.btnProcesar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnProcesar.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnProcesar.Image = global::CargaReembolso.Properties.Resources.execute;
+            this.btnProcesar.Location = new System.Drawing.Point(3, 0);
+            this.btnProcesar.Margin = new System.Windows.Forms.Padding(3, 0, 3, 4);
             this.btnProcesar.Name = "btnProcesar";
-            this.btnProcesar.Size = new System.Drawing.Size(154, 38);
+            this.btnProcesar.Size = new System.Drawing.Size(206, 50);
             this.btnProcesar.TabIndex = 1;
             this.btnProcesar.Text = "PROCESAR";
+            this.btnProcesar.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnProcesar.UseVisualStyleBackColor = false;
             this.btnProcesar.Click += new System.EventHandler(this.btnProcesar_Click);
             // 
@@ -76,7 +78,7 @@ namespace CargaReembolso
             this.btnSimular.Location = new System.Drawing.Point(215, 4);
             this.btnSimular.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnSimular.Name = "btnSimular";
-            this.btnSimular.Size = new System.Drawing.Size(154, 38);
+            this.btnSimular.Size = new System.Drawing.Size(154, 46);
             this.btnSimular.TabIndex = 2;
             this.btnSimular.Text = "SIMULAR";
             this.btnSimular.UseVisualStyleBackColor = false;
@@ -85,12 +87,13 @@ namespace CargaReembolso
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Gainsboro;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.pictureBox1.Image = global::CargaReembolso.Properties.Resources.LogoSS;
-            this.pictureBox1.Location = new System.Drawing.Point(1441, 50);
+            this.pictureBox1.Location = new System.Drawing.Point(1464, 58);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(178, 39);
+            this.pictureBox1.Size = new System.Drawing.Size(155, 47);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
@@ -101,10 +104,10 @@ namespace CargaReembolso
             this.pnlInferior.BackColor = System.Drawing.Color.Gainsboro;
             this.pnlInferior.Controls.Add(this.tableLayoutPanel2);
             this.pnlInferior.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlInferior.Location = new System.Drawing.Point(0, 952);
+            this.pnlInferior.Location = new System.Drawing.Point(0, 936);
             this.pnlInferior.Name = "pnlInferior";
             this.pnlInferior.Padding = new System.Windows.Forms.Padding(5);
-            this.pnlInferior.Size = new System.Drawing.Size(1632, 103);
+            this.pnlInferior.Size = new System.Drawing.Size(1632, 119);
             this.pnlInferior.TabIndex = 16;
             // 
             // tableLayoutPanel2
@@ -125,7 +128,7 @@ namespace CargaReembolso
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1622, 93);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1622, 109);
             this.tableLayoutPanel2.TabIndex = 13;
             // 
             // prgBar
@@ -133,7 +136,7 @@ namespace CargaReembolso
             this.prgBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.prgBar.Location = new System.Drawing.Point(1095, 3);
             this.prgBar.Name = "prgBar";
-            this.prgBar.Size = new System.Drawing.Size(524, 40);
+            this.prgBar.Size = new System.Drawing.Size(524, 48);
             this.prgBar.TabIndex = 13;
             // 
             // btnConnect
@@ -143,10 +146,11 @@ namespace CargaReembolso
             this.btnConnect.FlatAppearance.BorderSize = 0;
             this.btnConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConnect.Image = global::CargaReembolso.Properties.Resources.connect;
-            this.btnConnect.Location = new System.Drawing.Point(567, 3);
+            this.btnConnect.Image = global::CargaReembolso.Properties.Resources.conexion;
+            this.btnConnect.Location = new System.Drawing.Point(567, 0);
+            this.btnConnect.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(195, 40);
+            this.btnConnect.Size = new System.Drawing.Size(219, 51);
             this.btnConnect.TabIndex = 14;
             this.btnConnect.Text = "Conectar";
             this.btnConnect.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
@@ -158,7 +162,7 @@ namespace CargaReembolso
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(0, 53);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(1632, 899);
+            this.pnlContent.Size = new System.Drawing.Size(1632, 883);
             this.pnlContent.TabIndex = 18;
             // 
             // btnFact

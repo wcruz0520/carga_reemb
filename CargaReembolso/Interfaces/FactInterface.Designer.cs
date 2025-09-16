@@ -30,12 +30,12 @@ namespace CargaReembolso.Interfaces
         private void InitializeComponent()
         {
             this.lblIntro = new System.Windows.Forms.Label();
-            this.btnLimpiar = new System.Windows.Forms.Button();
             this.grdFact = new System.Windows.Forms.DataGridView();
             this.pnl1 = new System.Windows.Forms.Panel();
             this.pnl2 = new System.Windows.Forms.Panel();
-            this.btnCargar = new System.Windows.Forms.Button();
             this.pnl3 = new System.Windows.Forms.Panel();
+            this.btnCargar = new System.Windows.Forms.Button();
+            this.btnLimpiar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grdFact)).BeginInit();
             this.pnl1.SuspendLayout();
             this.pnl2.SuspendLayout();
@@ -53,21 +53,6 @@ namespace CargaReembolso.Interfaces
             this.lblIntro.TabIndex = 1;
             this.lblIntro.Text = "Sección para cargar facturas.";
             // 
-            // btnLimpiar
-            // 
-            this.btnLimpiar.BackColor = System.Drawing.Color.White;
-            this.btnLimpiar.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnLimpiar.FlatAppearance.BorderSize = 0;
-            this.btnLimpiar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpiar.Location = new System.Drawing.Point(1463, 10);
-            this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(159, 36);
-            this.btnLimpiar.TabIndex = 2;
-            this.btnLimpiar.Text = "Limpiar";
-            this.btnLimpiar.UseVisualStyleBackColor = false;
-            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
-            // 
             // grdFact
             // 
             this.grdFact.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -79,7 +64,7 @@ namespace CargaReembolso.Interfaces
             this.grdFact.RowHeadersVisible = false;
             this.grdFact.RowHeadersWidth = 51;
             this.grdFact.RowTemplate.Height = 28;
-            this.grdFact.Size = new System.Drawing.Size(1612, 853);
+            this.grdFact.Size = new System.Drawing.Size(1612, 839);
             this.grdFact.TabIndex = 3;
             // 
             // pnl1
@@ -100,32 +85,47 @@ namespace CargaReembolso.Interfaces
             this.pnl2.Location = new System.Drawing.Point(0, 44);
             this.pnl2.Name = "pnl2";
             this.pnl2.Padding = new System.Windows.Forms.Padding(10);
-            this.pnl2.Size = new System.Drawing.Size(1632, 56);
+            this.pnl2.Size = new System.Drawing.Size(1632, 70);
             this.pnl2.TabIndex = 5;
-            // 
-            // btnCargar
-            // 
-            this.btnCargar.BackColor = System.Drawing.Color.White;
-            this.btnCargar.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnCargar.FlatAppearance.BorderSize = 0;
-            this.btnCargar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCargar.Location = new System.Drawing.Point(10, 10);
-            this.btnCargar.Name = "btnCargar";
-            this.btnCargar.Size = new System.Drawing.Size(86, 36);
-            this.btnCargar.TabIndex = 3;
-            this.btnCargar.Text = "...";
-            this.btnCargar.UseVisualStyleBackColor = false;
-            this.btnCargar.Click += new System.EventHandler(this.btnCargar_Click);
             // 
             // pnl3
             // 
             this.pnl3.Controls.Add(this.grdFact);
             this.pnl3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnl3.Location = new System.Drawing.Point(0, 100);
+            this.pnl3.Location = new System.Drawing.Point(0, 114);
             this.pnl3.Name = "pnl3";
             this.pnl3.Padding = new System.Windows.Forms.Padding(10);
-            this.pnl3.Size = new System.Drawing.Size(1632, 873);
+            this.pnl3.Size = new System.Drawing.Size(1632, 859);
             this.pnl3.TabIndex = 6;
+            // 
+            // btnCargar
+            // 
+            this.btnCargar.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnCargar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnCargar.FlatAppearance.BorderSize = 0;
+            this.btnCargar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCargar.Image = global::CargaReembolso.Properties.Resources.upload_icon;
+            this.btnCargar.Location = new System.Drawing.Point(10, 10);
+            this.btnCargar.Name = "btnCargar";
+            this.btnCargar.Size = new System.Drawing.Size(86, 50);
+            this.btnCargar.TabIndex = 3;
+            this.btnCargar.UseVisualStyleBackColor = false;
+            this.btnCargar.Click += new System.EventHandler(this.btnCargar_Click);
+            // 
+            // btnLimpiar
+            // 
+            this.btnLimpiar.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnLimpiar.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnLimpiar.FlatAppearance.BorderSize = 0;
+            this.btnLimpiar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLimpiar.Image = global::CargaReembolso.Properties.Resources.refresh;
+            this.btnLimpiar.Location = new System.Drawing.Point(1535, 10);
+            this.btnLimpiar.Name = "btnLimpiar";
+            this.btnLimpiar.Size = new System.Drawing.Size(87, 50);
+            this.btnLimpiar.TabIndex = 2;
+            this.btnLimpiar.UseVisualStyleBackColor = false;
+            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
             // FactInterface
             // 

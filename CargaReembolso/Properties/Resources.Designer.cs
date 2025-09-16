@@ -83,6 +83,16 @@ namespace CargaReembolso.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap execute {
+            get {
+                object obj = ResourceManager.GetObject("execute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap LogoSS {
             get {
                 object obj = ResourceManager.GetObject("LogoSS", resourceCulture);
@@ -107,6 +117,36 @@ namespace CargaReembolso.Properties {
             get {
                 object obj = ResourceManager.GetObject("LogoV3", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap refresh {
+            get {
+                object obj = ResourceManager.GetObject("refresh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap upload_icon {
+            get {
+                object obj = ResourceManager.GetObject("upload_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap upload_icon_redim {
+            get {
+                object obj = ResourceManager.GetObject("upload_icon_redim", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
