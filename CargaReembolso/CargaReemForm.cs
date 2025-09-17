@@ -58,9 +58,11 @@ namespace CargaReembolso
             //label3.Text = $"Copyright © {Anio} SOLSAP S.A.";
 
             this.AutoSize = true;
-            this.btnProcesar.Enabled = false;
-            this.btnSimular.Enabled = false;
-            this.btnConnect.Enabled = true;
+            //this.btnProcesar.Enabled = false;
+            this.btnProccess.Enabled = false;
+            //this.btnSimular.Enabled = false;
+            //this.btnConnect.Enabled = true;
+            this.btnConectar.Enabled = true;
 
             strTest = Environment.GetCommandLineArgs();
 
@@ -79,9 +81,15 @@ namespace CargaReembolso
             {
                 this.Text = $"CARGA REEMBOLSOS {Globals.rCompany.CompanyName.ToString().ToUpper()}";
                 //this.btnConnect.Enabled = false;
-                this.btnConnect.Text = "Desconectar";
-                this.btnProcesar.Enabled = true;
-                this.btnSimular.Enabled = true;
+                //this.btnConnect.Text = "DESCONECTAR";
+                //this.btnProcesar.Enabled = true;
+                this.btnProccess.Enabled = true;
+                //this.btnSimular.Enabled = true;
+
+                this.btnConectar.Text = "DESCONECTAR";
+                this.btnConectar.Enabled = true;
+                this.btnConectar.IconColor = Color.Green;
+                this.btnConectar.IconChar = IconChar.PlugCircleCheck;
             }
 
             ucFact = new FactInterface();
@@ -90,16 +98,7 @@ namespace CargaReembolso
             ucFact.Dock = DockStyle.Fill;
             ucReemb.Dock = DockStyle.Fill;
 
-            //btnPrueba.Text = "Procesar";
-            //btnPrueba.IconChar = IconChar.Play;   // Ícono de "Play"
-            //btnPrueba.IconColor = Color.Green;    // Color del ícono
-            //btnPrueba.IconSize = 32;              // Tamaño del ícono
-            //btnPrueba.TextImageRelation = TextImageRelation.ImageBeforeText;
-            //btnPrueba.Size = new Size(150, 40);
-            //btnPrueba.Location = new Point(20, 20);
-
             MostrarUserControl(ucReemb, btnReemb);
-
         }
 
         /// <summary>
@@ -233,41 +232,43 @@ namespace CargaReembolso
             botonSeleccionado.BackColor = colorActivo;
         }
 
-        private async void btnProcesar_Click(object sender, EventArgs e)
-        {
-            var Factgrids_valid = ucFact.GetAllGrids();
-            var Reembgrids_valid = ucReemb.GetAllGrids();
-            this.btnConnect.Enabled = false;
-            this.btnSimular.Enabled = false;
-            this.btnFact.Enabled = false;
-            this.btnReemb.Enabled = false;
+        //private async void btnProcesar_Click(object sender, EventArgs e)
+        //{
+        //    var Factgrids_valid = ucFact.GetAllGrids();
+        //    var Reembgrids_valid = ucReemb.GetAllGrids();
+        //    //this.btnConnect.Enabled = false;
+        //    this.btnConectar.Enabled = false;
+        //    //this.btnSimular.Enabled = false;
+        //    //this.btnFact.Enabled = false;
+        //    //this.btnReemb.Enabled = false;
 
-            if (Reembgrids_valid.Count >= 1)
-            {
-                //crearReembolsos();
-                await Task.Run(() =>
-                {
-                    crearReembolsos();
-                });
-            }
+        //    if (Reembgrids_valid.Count >= 1)
+        //    {
+        //        //crearReembolsos();
+        //        await Task.Run(() =>
+        //        {
+        //            crearReembolsos();
+        //        });
+        //    }
 
-            if (Factgrids_valid.Count >= 1)
-            {
-                crearFactura();
-            }
+        //    if (Factgrids_valid.Count >= 1)
+        //    {
+        //        crearFactura();
+        //    }
 
-            var frmResultados = new ResultadosForm(resultadosReemb, resultadosFact);
-            frmResultados.Text = "Resultado procesamiento - Real";
-            frmResultados.StartPosition = FormStartPosition.CenterParent;
-            frmResultados.ShowDialog();
+        //    var frmResultados = new ResultadosForm(resultadosReemb, resultadosFact);
+        //    frmResultados.Text = "Resultado procesamiento - Real";
+        //    frmResultados.StartPosition = FormStartPosition.CenterParent;
+        //    frmResultados.ShowDialog();
 
-            this.btnConnect.Enabled = true;
-            this.btnSimular.Enabled = true;
-            this.btnFact.Enabled = true;
-            this.btnReemb.Enabled = true;
-            prgBar.Value = 0;
-            //this.prgBar = new ProgressBar();
-        }
+        //    //this.btnConnect.Enabled = true;
+        //    this.btnConectar.Enabled = true;
+        //    //this.btnSimular.Enabled = true;
+        //    //this.btnFact.Enabled = true;
+        //    //this.btnReemb.Enabled = true;
+        //    prgBar.Value = 0;
+        //    //this.prgBar = new ProgressBar();
+        //}
 
         private void crearReembolsos()
         {
@@ -613,57 +614,57 @@ namespace CargaReembolso
             }
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
-        {
-            if(this.btnConnect.Text == "Conectar")
-            {
-                if (string.IsNullOrEmpty(strConnString))
-                {
-                    MessageBox.Show("El programa se debe ejecutar desde SAP Business One. (Carga Reembolso -Err2)");
-                    Environment.Exit(0);
-                }
+        //private void btnConnect_Click(object sender, EventArgs e)
+        //{
+        //    if(this.btnConnect.Text == "Conectar")
+        //    {
+        //        if (string.IsNullOrEmpty(strConnString))
+        //        {
+        //            MessageBox.Show("El programa se debe ejecutar desde SAP Business One. (Carga Reembolso -Err2)");
+        //            Environment.Exit(0);
+        //        }
 
-                if (ConectarSAP(strConnString))
-                {
-                    this.Text = $"CARGA REEMBOLSOS {Globals.rCompany.CompanyName.ToString().ToUpper()}";
-                    //this.btnConnect.Enabled = false;
-                    this.btnConnect.Text = "Desconectar";
-                    this.btnProcesar.Enabled = true;
-                    this.btnSimular.Enabled = true;
-                }
-            }
-            else
-            {
-                try
-                {
-                    if (Globals.rCompany != null && Globals.rCompany.Connected)
-                    {
-                        Globals.rCompany.Disconnect();
-                        Globals.rCompany = null;
-                        rSboApp = null;
-                        rSboGui = null;
-                    }
+        //        if (ConectarSAP(strConnString))
+        //        {
+        //            this.Text = $"CARGA REEMBOLSOS {Globals.rCompany.CompanyName.ToString().ToUpper()}";
+        //            //this.btnConnect.Enabled = false;
+        //            this.btnConnect.Text = "DESCONECTAR";
+        //            this.btnProcesar.Enabled = true;
+        //            //this.btnSimular.Enabled = true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        try
+        //        {
+        //            if (Globals.rCompany != null && Globals.rCompany.Connected)
+        //            {
+        //                Globals.rCompany.Disconnect();
+        //                Globals.rCompany = null;
+        //                rSboApp = null;
+        //                rSboGui = null;
+        //            }
 
-                    this.Text = "CARGA REEMBOLSOS (Desconectado)";
-                    this.btnConnect.Text = "Conectar";
-                    this.btnProcesar.Enabled = false;
-                    this.btnSimular.Enabled = false;
+        //            this.Text = "CARGA REEMBOLSOS (Desconectado)";
+        //            this.btnConnect.Text = "CONECTAR";
+        //            this.btnProcesar.Enabled = false;
+        //            //this.btnSimular.Enabled = false;
 
-                    //MessageBox.Show("Se ha desconectado de SAP correctamente.",
-                    //                "Desconexión",
-                    //                MessageBoxButtons.OK,
-                    //                MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error al desconectarse de SAP: " + ex.Message,
-                                    "Error",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-                }
-            }
+        //            //MessageBox.Show("Se ha desconectado de SAP correctamente.",
+        //            //                "Desconexión",
+        //            //                MessageBoxButtons.OK,
+        //            //                MessageBoxIcon.Information);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show("Error al desconectarse de SAP: " + ex.Message,
+        //                            "Error",
+        //                            MessageBoxButtons.OK,
+        //                            MessageBoxIcon.Error);
+        //        }
+        //    }
             
-        }
+        //}
 
         private BoDocumentTypes? ConvertToDocType(object value)
         {
@@ -732,6 +733,109 @@ namespace CargaReembolso
             catch (Exception ex)
             {
                 throw new Exception($"Error al leer el campo {fieldName}: {ex.Message}");
+            }
+        }
+
+        private async void btnProccess_Click(object sender, EventArgs e)
+        {
+            var Factgrids_valid = ucFact.GetAllGrids();
+            var Reembgrids_valid = ucReemb.GetAllGrids();
+
+            this.btnProccess.Enabled = false;
+            this.btnConectar.Enabled = false;
+            //this.btnSimular.Enabled = false;
+
+            this.btnFact.Enabled = false;
+            //this.btnFactura.Enabled = false;
+
+            this.btnReemb.Enabled = false;
+            //this.btnReembolso.Enabled = false;
+
+            if (Reembgrids_valid.Count >= 1)
+            {
+                //crearReembolsos();
+                await Task.Run(() =>
+                {
+                    crearReembolsos();
+                });
+            }
+
+            if (Factgrids_valid.Count >= 1)
+            {
+                crearFactura();
+            }
+
+            var frmResultados = new ResultadosForm(resultadosReemb, resultadosFact);
+            frmResultados.Text = "Resultado procesamiento - Real";
+            frmResultados.StartPosition = FormStartPosition.CenterParent;
+            frmResultados.ShowDialog();
+
+            this.btnConectar.Enabled = true;
+            //this.btnSimular.Enabled = true;
+            
+            this.btnFact.Enabled = true;
+            //this.btnFactura.Enabled = false;
+
+            this.btnReemb.Enabled = true;
+            //this.btnReembolso.Enabled = true;
+            this.btnProccess.Enabled = true;
+
+            prgBar.Value = 0;
+            //this.prgBar = new ProgressBar();
+        }
+
+        private void btnConectar_Click(object sender, EventArgs e)
+        {
+            if (this.btnConectar.Text == "CONECTAR")
+            {
+                if (string.IsNullOrEmpty(strConnString))
+                {
+                    MessageBox.Show("El programa se debe ejecutar desde SAP Business One. (Carga Reembolso -Err2)");
+                    Environment.Exit(0);
+                }
+
+                if (ConectarSAP(strConnString))
+                {
+                    this.Text = $"CARGA REEMBOLSOS {Globals.rCompany.CompanyName.ToString().ToUpper()}";
+                    //this.btnConnect.Enabled = false;
+                    this.btnConectar.Text = "DESCONECTAR";
+                    this.btnConectar.IconChar = IconChar.PlugCircleCheck;
+                    this.btnProccess.Enabled = true;
+                    this.btnConectar.IconColor = Color.Green;
+                    //this.btnSimular.Enabled = true;
+                }
+            }
+            else
+            {
+                try
+                {
+                    if (Globals.rCompany != null && Globals.rCompany.Connected)
+                    {
+                        Globals.rCompany.Disconnect();
+                        Globals.rCompany = null;
+                        rSboApp = null;
+                        rSboGui = null;
+                    }
+
+                    this.Text = "CARGA REEMBOLSOS (Desconectado)";
+                    this.btnConectar.Text = "CONECTAR";
+                    this.btnConectar.IconColor = Color.Red;
+                    this.btnConectar.IconChar = IconChar.PlugCircleXmark;
+                    this.btnProccess.Enabled = false;
+                    //this.btnSimular.Enabled = false;
+
+                    //MessageBox.Show("Se ha desconectado de SAP correctamente.",
+                    //                "Desconexión",
+                    //                MessageBoxButtons.OK,
+                    //                MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al desconectarse de SAP: " + ex.Message,
+                                    "Error",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                }
             }
         }
 
